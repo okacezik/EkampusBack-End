@@ -12,7 +12,7 @@ public interface StudentService {
 	
 	Result delete(String password, String studentNumber);
 	
-	Result entryStudent(String password, String studentNumber);
+	DataResult<Boolean> entryStudent(String password, String studentNumber);
 	
 	//DataResult<List<Student>> getAll();
 	

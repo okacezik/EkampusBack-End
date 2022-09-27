@@ -1,5 +1,6 @@
 package myproject.ekampus.business.concretes;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,16 @@ public class PostManager implements PostService{
 	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetails() {
 		return new SuccessDataResult<List<PostWithStudentDto>>
 		(this.postDao.getPostWithStudentDetails(),Messages.postsListMessage);
+	}
+
+	@Override
+	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetails(int studentId) {
+		List<PostWithStudentDto> studentPosts = new ArrayList<PostWithStudentDto>();
+		for(PostWithStudentDto post : this.postDao.getPostWithStudentDetails()) {
+			if(post.getStudentId() == studentId) {
+				studentPosts.add(post);
+			}
+		}
+		return new SuccessDataResult<List<PostWithStudentDto>>(studentPosts, Messages.postsListMessage);
 	}
 }

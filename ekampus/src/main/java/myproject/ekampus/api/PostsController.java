@@ -42,4 +42,9 @@ public class PostsController {
 	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetails(){
 		return this.postService.getPostWithStudentDetails();
 	}
+	
+	@GetMapping("/getPostsByStudentId")
+	public DataResult<List<PostWithStudentDto>> getPostsByStudentId(@RequestParam int studentId){
+		return this.postService.getPostWithStudentDetails(studentId);
+	}
 }

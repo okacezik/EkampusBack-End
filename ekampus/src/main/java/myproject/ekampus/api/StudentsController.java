@@ -46,7 +46,7 @@ public class StudentsController {
 	*/
 	
 	@PostMapping("/entry")
-	public Result entryStudent(@RequestParam("password") String password,@RequestParam("studentNumber") String studentNumber) {
+	public DataResult<Boolean> entryStudent(@RequestParam("password") String password,@RequestParam("studentNumber") String studentNumber) {
 		return this.studentService.entryStudent(password, studentNumber);
 	}
 	

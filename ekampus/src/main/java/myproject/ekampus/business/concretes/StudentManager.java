@@ -59,12 +59,12 @@ public class StudentManager implements StudentService{
 	 */
 	
 	@Override
-	public Result entryStudent(String password, String studentNumber) {
+	public DataResult<Boolean> entryStudent(String password, String studentNumber) {
 		Student result = BusinessRules.existStudentControl(students, studentNumber, password);
 		if(result != null) {
-			return new SuccessResult(Messages.welcomeStudent);
+			return new SuccessDataResult<Boolean>(true,Messages.welcomeStudent);
 		}
-		return new ErrorResult(Messages.wrongUserİnformations);
+		return new ErrorDataResult<Boolean>(false,Messages.wrongUserİnformations);
 	}
 
 	@Override
