@@ -44,5 +44,4 @@ public class Student {
 	
 	@OneToMany(mappedBy = "student")
 	private List<Post> posts;
-	
 }

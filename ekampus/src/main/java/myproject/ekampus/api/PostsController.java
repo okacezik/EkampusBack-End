@@ -47,4 +47,9 @@ public class PostsController {
 	public DataResult<List<PostWithStudentDto>> getPostsByStudentId(@RequestParam int studentId){
 		return this.postService.getPostWithStudentDetails(studentId);
 	}
+	
+	@GetMapping("/getPostDetailsBySort")
+	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsBySort(){
+		return this.postService.getPostWithStudentDetailsBySort();
+	}
 }

@@ -16,6 +16,8 @@ public interface PostService {
 	
 	DataResult<List<PostWithStudentDto>> getPostWithStudentDetails();
 	
+	DataResult <List<PostWithStudentDto>> getPostWithStudentDetailsBySort();
+	
 	DataResult<List<PostWithStudentDto>> getPostWithStudentDetails(int studentId);
 
 }

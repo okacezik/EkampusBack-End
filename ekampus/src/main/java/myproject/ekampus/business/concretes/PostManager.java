@@ -1,6 +1,7 @@
 package myproject.ekampus.business.concretes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,5 +61,13 @@ public class PostManager implements PostService{
 			}
 		}
 		return new SuccessDataResult<List<PostWithStudentDto>>(studentPosts, Messages.postsListMessage);
+	}
+
+	@Override
+	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsBySort() {
+		//Sort sort = Sort.by(Sort.Direction.DESC,"loadDate");
+		List<PostWithStudentDto> sortedPosts = this.postDao.getPostWithStudentDetails();
+		Collections.reverse(sortedPosts);
+		return new SuccessDataResult<List<PostWithStudentDto>>(sortedPosts, Messages.postsListMessage);
 	}
 }
