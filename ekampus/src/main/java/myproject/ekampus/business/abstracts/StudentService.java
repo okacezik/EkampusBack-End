@@ -26,4 +26,6 @@ public interface StudentService {
 	
 	DataResult<List<StudentDetailDto>> getAllStudent();
 	
+	DataResult<List<StudentDetailDto>> getAllStudentBySorted();
+	
 }

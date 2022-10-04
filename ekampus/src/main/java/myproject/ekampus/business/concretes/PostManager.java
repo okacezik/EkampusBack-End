@@ -1,10 +1,10 @@
 package myproject.ekampus.business.concretes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import myproject.ekampus.business.BusinessRules.PostBusinessRules;
 import myproject.ekampus.business.abstracts.PostService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorResult;
@@ -36,7 +36,7 @@ public class PostManager implements PostService{
 	@Override
 	public Result delete(int postId, int ownerId) {
 		
-		Post post = BusinessRules.existPostControl(posts, postId);
+		Post post = PostBusinessRules.existPostControl(posts, postId);
 		
 		if(post == null) {
 			return new ErrorResult(Messages.notFindPost);
@@ -60,14 +60,17 @@ public class PostManager implements PostService{
 				studentPosts.add(post);
 			}
 		}
-		return new SuccessDataResult<List<PostWithStudentDto>>(studentPosts, Messages.postsListMessage);
+		return new SuccessDataResult<List<PostWithStudentDto>>
+			(studentPosts, Messages.postsListMessage);
 	}
 
 	@Override
-	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsBySort() {
+	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsSortedByLoadDate() {
 		//Sort sort = Sort.by(Sort.Direction.DESC,"loadDate");
 		List<PostWithStudentDto> sortedPosts = this.postDao.getPostWithStudentDetails();
-		Collections.reverse(sortedPosts);
-		return new SuccessDataResult<List<PostWithStudentDto>>(sortedPosts, Messages.postsListMessage);
+		//Collections.reverse(sortedPosts);
+		
+		return new SuccessDataResult<List<PostWithStudentDto>>
+			(PostBusinessRules.getAllPostByReverse(sortedPosts), Messages.postsListMessage);
 	}
 }

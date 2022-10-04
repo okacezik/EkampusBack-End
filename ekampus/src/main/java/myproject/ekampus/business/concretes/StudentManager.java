@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import myproject.ekampus.business.BusinessRules.StudentBusinessRules;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
@@ -30,7 +31,7 @@ public class StudentManager implements StudentService{
 	@Override
 	public Result add(Student student) {
 		
-		boolean result = BusinessRules.addStudentControl(students, student);
+		boolean result = StudentBusinessRules.addStudentControl(students, student);
 		if(result) {
 			return new ErrorResult(Messages.existStudentForAddOperation);
 		}else {
@@ -42,7 +43,7 @@ public class StudentManager implements StudentService{
 	@Override
 	public Result delete(String password, String studentNumber) {
 		
-		Student result = BusinessRules.existStudentControl(students, studentNumber, password);
+		Student result = StudentBusinessRules.existStudentControl(students, studentNumber, password);
 		if(result != null) {
 			this.studentDao.delete(result);
 			return new SuccessResult(Messages.studentDeleteMessage);
@@ -60,7 +61,7 @@ public class StudentManager implements StudentService{
 	
 	@Override
 	public DataResult<Boolean> entryStudent(String password, String studentNumber) {
-		Student result = BusinessRules.existStudentControl(students, studentNumber, password);
+		Student result = StudentBusinessRules.existStudentControl(students, studentNumber, password);
 		if(result != null) {
 			return new SuccessDataResult<Boolean>(true,Messages.welcomeStudent);
 		}
@@ -120,5 +121,10 @@ public class StudentManager implements StudentService{
 			(students,Messages.studentsListMessage);
 	}
 
-
+	@Override
+	public DataResult<List<StudentDetailDto>> getAllStudentBySorted() {
+		List<StudentDetailDto> sortedList = this.studentDao.getAllStudent();
+		return new SuccessDataResult<List<StudentDetailDto>>
+				(StudentBusinessRules.getAllStudentBySorted(sortedList), Messages.studentsListMessage);
+	}
 }

@@ -1,10 +1,12 @@
-package myproject.ekampus.business.concretes;
+package myproject.ekampus.business.BusinessRules;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import myproject.ekampus.entities.concretes.Post;
 import myproject.ekampus.entities.concretes.Student;
+import myproject.ekampus.entities.dtos.StudentDetailDto;
 
-public class BusinessRules {
+public class StudentBusinessRules {
 	
 	public static Student existStudentControl(List<Student> students,String studentNumber, String password) {
 		for(Student student : students) {
@@ -24,13 +26,17 @@ public class BusinessRules {
 		}
 		return false;
 	}
+	
+	public static List<StudentDetailDto> getAllStudentBySorted(List<StudentDetailDto> sortedList){
 
-	public static Post existPostControl(List<Post> posts, int postId) {
-		for(Post post2 : posts) {
-			if(post2.getId() == postId) {
-				return post2;
+		Collections.sort(sortedList,new Comparator<StudentDetailDto>() {
+			public int compare(StudentDetailDto student1, StudentDetailDto student2) {
+				String firstName = student1.getFirstName();
+				String firstName2 = student2.getFirstName();
+				return firstName.compareTo(firstName2);
 			}
-		}
-		return null;
+		});
+		
+		return sortedList;
 	}
 }

@@ -75,4 +75,9 @@ public class StudentsController {
 	public DataResult<StudentDetailDto> getStudentByStudentId(@RequestParam int id){
 		return this.studentService.findByStudentId(id);
 	}
+	
+	@GetMapping("/getAllStudentBySorted")
+	public DataResult<List<StudentDetailDto>> getAllStudentBySorted(){
+		return this.studentService.getAllStudentBySorted();
+	}
 }

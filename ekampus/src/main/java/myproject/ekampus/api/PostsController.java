@@ -49,7 +49,7 @@ public class PostsController {
 	}
 	
 	@GetMapping("/getPostDetailsBySort")
-	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsBySort(){
-		return this.postService.getPostWithStudentDetailsBySort();
+	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsSortedByLoadDate(){
+		return this.postService.getPostWithStudentDetailsSortedByLoadDate();
 	}
 }
