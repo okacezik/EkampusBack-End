@@ -2,10 +2,13 @@ package myproject.ekampus.business.concretes;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
 import myproject.ekampus.business.BusinessRules.StudentBusinessRules;
 import myproject.ekampus.business.abstracts.StudentService;
+import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
 import myproject.ekampus.core.utilites.results.ErrorResult;
@@ -17,20 +20,17 @@ import myproject.ekampus.entities.concretes.Student;
 import myproject.ekampus.entities.dtos.StudentDetailDto;
 
 @Service
+@AllArgsConstructor
 public class StudentManager implements StudentService{
 	
 	private StudentDao studentDao;
 	private List<Student> students;
-	
-	@Autowired
-	public StudentManager(StudentDao studentDao) {
-		this.studentDao = studentDao;
-		this.students = this.studentDao.findAll();
-	}
+	private ModelMapperService mapperService;
+
 
 	@Override
-	public Result add(Student student) {
-		
+	public Result add(CreateStudentRequest createStudentRequest) {
+		Student student = this.mapperService.forRequest().map(createStudentRequest,Student.class);
 		boolean result = StudentBusinessRules.addStudentControl(students, student);
 		if(result) {
 			return new ErrorResult(Messages.existStudentForAddOperation);
@@ -52,13 +52,7 @@ public class StudentManager implements StudentService{
 		}
 	}
 
-	/*
-	@Override
-	public DataResult<List<Student>> getAll() {
-		return new SuccessDataResult<List<Student>>(this.studentDao.findAll(), "Students listed...");
-	}
-	 */
-	
+
 	@Override
 	public DataResult<Boolean> entryStudent(String password, String studentNumber) {
 		Student result = StudentBusinessRules.existStudentControl(students, studentNumber, password);

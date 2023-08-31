@@ -1,14 +1,15 @@
 package myproject.ekampus.business.abstracts;
 
 import java.util.List;
+
+import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
-import myproject.ekampus.entities.concretes.Student;
 import myproject.ekampus.entities.dtos.StudentDetailDto;
 
 public interface StudentService {
 	
-	Result add(Student student);
+	Result add(CreateStudentRequest createStudentRequest);
 	
 	Result delete(String password, String studentNumber);
 	

@@ -13,7 +13,7 @@ public interface StudentDao extends JpaRepository<Student, Integer>{
 	//List<Student> getByFirstNameStartsWith(String studentName);
 	
 	@Query("Select new myproject.ekampus.entities.dtos.StudentDetailDto"
-			+ "(s.studentId,s.studentNumber,s.departmantName,s.firstName,s.lastName,s.password,s.studentPhotoPath) "
+			+ "(s.id,s.studentNumber,s.departmantName,s.firstName,s.lastName,s.password,s.studentPhotoPath) "
 			+ "From Student s")
 	List<StudentDetailDto> getAllStudent();
 }

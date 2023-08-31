@@ -1,7 +1,6 @@
 package myproject.ekampus.api;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,27 +9,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.PostService;
+import myproject.ekampus.business.dtos.requests.CreatePostRequest;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
-import myproject.ekampus.entities.concretes.Post;
 import myproject.ekampus.entities.dtos.PostWithStudentDto;
 
 @RestController
 @RequestMapping("/api/posts")
 @CrossOrigin
+@AllArgsConstructor
 public class PostsController {
 	
 	private PostService postService;
 	
-	@Autowired
-	public PostsController(PostService postService) {
-		this.postService = postService;
-	}
 	
 	@PostMapping("/add")
-	public Result add(@RequestBody Post post) {
-		return this.postService.add(post);
+	public Result add(@RequestBody CreatePostRequest createPostRequest) {
+		return this.postService.add(createPostRequest);
 	}
 	
 	@DeleteMapping("/delete")
