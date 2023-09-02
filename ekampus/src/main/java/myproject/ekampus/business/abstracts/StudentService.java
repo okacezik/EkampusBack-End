@@ -3,6 +3,7 @@ package myproject.ekampus.business.abstracts;
 import java.util.List;
 
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 import myproject.ekampus.entities.dtos.StudentDetailDto;
@@ -25,7 +26,9 @@ public interface StudentService {
 	
 	DataResult<List<StudentDetailDto>> getByFirstNameStartsWith(String studentName);
 	
-	DataResult<List<StudentDetailDto>> getAllStudent();
+	//DataResult<List<StudentDetailDto>> getAllStudent();
+	
+	DataResult<List<GetAllStudentsResponse>> getAllStudents();
 	
 	DataResult<List<StudentDetailDto>> getAllStudentBySorted();
 	

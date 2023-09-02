@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 import myproject.ekampus.entities.dtos.StudentDetailDto;
@@ -62,10 +63,16 @@ public class StudentsController {
 	public DataResult<List<StudentDetailDto>> getByFirstNameStartsWith(@RequestParam String studentName){
 		return this.studentService.getByFirstNameStartsWith(studentName);
 	}
-	
+	/*
 	@GetMapping("/getAllStudents")
 	public DataResult<List<StudentDetailDto>> getAllStudent(){
 		return this.studentService.getAllStudent();
+	}
+	*/
+	
+	@GetMapping("/getAllStudents")
+	public DataResult<List<GetAllStudentsResponse>> getAllStudent(){
+		return this.studentService.getAllStudents();
 	}
 	
 	@GetMapping("/getStudentByStudentId")

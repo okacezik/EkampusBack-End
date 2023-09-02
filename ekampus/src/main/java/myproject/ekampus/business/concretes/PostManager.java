@@ -1,13 +1,15 @@
 package myproject.ekampus.business.concretes;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.BusinessRules.PostBusinessRules;
 import myproject.ekampus.business.abstracts.PostService;
 import myproject.ekampus.business.dtos.requests.CreatePostRequest;
+import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorResult;
@@ -16,7 +18,6 @@ import myproject.ekampus.core.utilites.results.SuccessDataResult;
 import myproject.ekampus.core.utilites.results.SuccessResult;
 import myproject.ekampus.dataAccess.abstracts.PostDao;
 import myproject.ekampus.entities.concretes.Post;
-import myproject.ekampus.entities.dtos.PostWithStudentDto;
 
 @Service
 @AllArgsConstructor
@@ -47,29 +48,37 @@ public class PostManager implements PostService {
 	}
 
 	@Override
-	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetails() {
-		return new SuccessDataResult<List<PostWithStudentDto>>(this.postDao.getPostWithStudentDetails(),
+	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate() {
+		List<Post> posts = this.postDao.findAll();
+		List<GetAllPostsResponse> response = posts.stream()
+				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<GetAllPostsResponse>>(PostBusinessRules.getAllPostByReverse(response),
 				Messages.postsListMessage);
 	}
 
 	@Override
-	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetails(int studentId) {
-		List<PostWithStudentDto> studentPosts = new ArrayList<PostWithStudentDto>();
-		for (PostWithStudentDto post : this.postDao.getPostWithStudentDetails()) {
-			if (post.getStudentId() == studentId) {
-				studentPosts.add(post);
-			}
-		}
-		return new SuccessDataResult<List<PostWithStudentDto>>(studentPosts, Messages.postsListMessage);
+	public DataResult<List<GetAllPostsResponse>> getAllPostsWithStudentDetails() {
+		List<Post> posts = this.postDao.findAll();
+		List<GetAllPostsResponse> response = posts.stream()
+				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
 	}
 
 	@Override
-	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsSortedByLoadDate() {
-		// Sort sort = Sort.by(Sort.Direction.DESC,"loadDate");
-		List<PostWithStudentDto> sortedPosts = this.postDao.getPostWithStudentDetails();
-		// Collections.reverse(sortedPosts);
+	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails(int studentId) {
 
-		return new SuccessDataResult<List<PostWithStudentDto>>(PostBusinessRules.getAllPostByReverse(sortedPosts),
-				Messages.postsListMessage);
+		List<Post> posts = this.postDao.findAll();
+		List<Post> studentPosts = posts.stream().filter(post -> post.getStudent().getId() == studentId)
+				.collect(Collectors.toList());
+
+		List<GetAllPostsResponse> response = studentPosts.stream()
+				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
 	}
 }

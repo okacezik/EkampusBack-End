@@ -3,9 +3,9 @@ package myproject.ekampus.business.abstracts;
 import java.util.List;
 
 import myproject.ekampus.business.dtos.requests.CreatePostRequest;
+import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
-import myproject.ekampus.entities.dtos.PostWithStudentDto;
 
 public interface PostService {
 	
@@ -13,12 +13,10 @@ public interface PostService {
 	
 	Result delete(int postId, int ownerId);
 
-	//DataResult<List<Post>> getAll();
+	DataResult<List<GetAllPostsResponse>> getAllPostsWithStudentDetails();
 	
-	DataResult<List<PostWithStudentDto>> getPostWithStudentDetails();
-	
-	DataResult <List<PostWithStudentDto>> getPostWithStudentDetailsSortedByLoadDate();
-	
-	DataResult<List<PostWithStudentDto>> getPostWithStudentDetails(int studentId);
+	DataResult <List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate();
+		
+	DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails(int studentId);
 
 }

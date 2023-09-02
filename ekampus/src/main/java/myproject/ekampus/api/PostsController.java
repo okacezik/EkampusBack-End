@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.PostService;
 import myproject.ekampus.business.dtos.requests.CreatePostRequest;
+import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
-import myproject.ekampus.entities.dtos.PostWithStudentDto;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -36,18 +36,18 @@ public class PostsController {
 		return this.postService.delete(id, ownerId);
 	}
 	
-	@GetMapping("/getPostDetails")
-	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetails(){
-		return this.postService.getPostWithStudentDetails();
+	@GetMapping("/getPostWithStudentDetails")
+	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails(){
+		return this.postService.getAllPostsWithStudentDetails();
 	}
 	
 	@GetMapping("/getPostsByStudentId")
-	public DataResult<List<PostWithStudentDto>> getPostsByStudentId(@RequestParam int studentId){
+	public DataResult<List<GetAllPostsResponse>> getPostsByStudentId(@RequestParam int studentId){
 		return this.postService.getPostWithStudentDetails(studentId);
 	}
 	
 	@GetMapping("/getPostDetailsBySort")
-	public DataResult<List<PostWithStudentDto>> getPostWithStudentDetailsSortedByLoadDate(){
+	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate(){
 		return this.postService.getPostWithStudentDetailsSortedByLoadDate();
 	}
 }
