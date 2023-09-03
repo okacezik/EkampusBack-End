@@ -81,4 +81,14 @@ public class PostManager implements PostService {
 
 		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
 	}
+
+	@Override
+	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber) {
+		List<Post> posts = this.postDao.findByStudent_StudentNumber(studentNumber);
+		List<GetAllPostsResponse> response = posts.stream()
+				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
+				.collect(Collectors.toList());
+		
+		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
+	}
 }

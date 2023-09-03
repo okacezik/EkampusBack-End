@@ -50,4 +50,9 @@ public class PostsController {
 	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate(){
 		return this.postService.getPostWithStudentDetailsSortedByLoadDate();
 	}
+	
+	@GetMapping("/getPostsByStudentNumber")
+	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber){
+		return this.postService.findByStudent_StudentNumber(studentNumber);
+	}
 }

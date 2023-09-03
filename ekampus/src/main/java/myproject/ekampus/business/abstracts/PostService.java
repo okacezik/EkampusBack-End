@@ -8,15 +8,17 @@ import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
 public interface PostService {
-	
+
 	Result add(CreatePostRequest createPostRequest);
-	
+
 	Result delete(int postId, int ownerId);
 
 	DataResult<List<GetAllPostsResponse>> getAllPostsWithStudentDetails();
-	
-	DataResult <List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate();
-		
+
+	DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate();
+
 	DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails(int studentId);
+
+	DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber);
 
 }

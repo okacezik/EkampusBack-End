@@ -1,5 +1,8 @@
 package myproject.ekampus.dataAccess.abstracts;
 
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import myproject.ekampus.entities.concretes.Post;
 
@@ -14,4 +17,6 @@ public interface PostDao extends JpaRepository<Post, Integer>{
 	List<PostWithStudentDto> getPostWithStudentDetails();
 	
 	*/
+	
+	List<Post> findByStudent_StudentNumber(String studentNumber);
 }

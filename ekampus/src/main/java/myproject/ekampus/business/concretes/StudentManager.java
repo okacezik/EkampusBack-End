@@ -1,6 +1,5 @@
 package myproject.ekampus.business.concretes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +9,9 @@ import lombok.AllArgsConstructor;
 import myproject.ekampus.business.BusinessRules.StudentBusinessRules;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
+import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
@@ -20,7 +21,6 @@ import myproject.ekampus.core.utilites.results.SuccessDataResult;
 import myproject.ekampus.core.utilites.results.SuccessResult;
 import myproject.ekampus.dataAccess.abstracts.StudentDao;
 import myproject.ekampus.entities.concretes.Student;
-import myproject.ekampus.entities.dtos.StudentDetailDto;
 
 @Service
 @AllArgsConstructor
@@ -64,56 +64,43 @@ public class StudentManager implements StudentService {
 	}
 
 	@Override
-	public DataResult<StudentDetailDto> findByStudentName(String firstName) {
-		for (StudentDetailDto student : this.studentDao.getAllStudent()) {
-			if (student.getFirstName().equals(firstName)) {
-				return new SuccessDataResult<StudentDetailDto>(student, Messages.studentListMessage);
-			}
-		}
-		return new ErrorDataResult<StudentDetailDto>(null, Messages.notFindStudent);
+	public DataResult<GetAllStudentsResponse> findByStudentName(String firstName) {
+
+		Student student = this.studentDao.findByFirstName(firstName);
+		return new SuccessDataResult<GetAllStudentsResponse>(
+				this.mapperService.forResponse().map(student, GetAllStudentsResponse.class),
+				Messages.studentListMessage);
 	}
 
 	@Override
-	public DataResult<List<StudentDetailDto>> findByStudentNameContains(String studentName) {
-		List<StudentDetailDto> students = new ArrayList<StudentDetailDto>();
-		for (StudentDetailDto student : this.studentDao.getAllStudent()) {
-			if (student.getFirstName().contains(studentName) || student.getLastName().contains(studentName)) {
-				students.add(student);
-			}
-		}
-		return new SuccessDataResult<List<StudentDetailDto>>(students, Messages.studentsListMessage);
-	}
+	public DataResult<List<GetAllStudentsResponse>> findByStudentNameContains(String studentName) {
 
-	/*
-	 * @Override public DataResult<List<StudentDetailDto>> getAllStudent() { return
-	 * new SuccessDataResult<List<StudentDetailDto>>
-	 * (this.studentDao.getAllStudent(),Messages.studentsListMessage); }
-	 */
-	@Override
-	public DataResult<StudentDetailDto> findByStudentId(int id) {
-		for (StudentDetailDto student : this.studentDao.getAllStudent()) {
-			if (student.getStudentId() == id) {
-				return new SuccessDataResult<StudentDetailDto>(student, Messages.studentListMessage);
-			}
-		}
-		return new ErrorDataResult<StudentDetailDto>(null, Messages.notFindStudent);
+		List<Student> students = this.studentDao.findByFirstNameContains(studentName);
+		List<GetAllStudentsResponse> response = students.stream()
+				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
 	}
 
 	@Override
-	public DataResult<List<StudentDetailDto>> getByFirstNameStartsWith(String studentName) {
-		List<StudentDetailDto> students = new ArrayList<StudentDetailDto>();
-		for (StudentDetailDto student : this.studentDao.getAllStudent()) {
-			if (student.getFirstName().startsWith(studentName)) {
-				students.add(student);
-			}
-		}
-		return new SuccessDataResult<List<StudentDetailDto>>(students, Messages.studentsListMessage);
+	public DataResult<List<GetAllStudentsResponse>> findByFirstNameStartsWith(String studentName) {
+
+		List<Student> students = this.studentDao.findByFirstNameStartsWith(studentName);
+		List<GetAllStudentsResponse> response = students.stream()
+				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
 	}
 
 	@Override
-	public DataResult<List<StudentDetailDto>> getAllStudentBySorted() {
-		List<StudentDetailDto> sortedList = this.studentDao.getAllStudent();
-		return new SuccessDataResult<List<StudentDetailDto>>(StudentBusinessRules.getAllStudentBySorted(sortedList),
+	public DataResult<List<GetAllStudentsResponse>> getAllStudentBySorted() {
+		List<Student> students = this.studentDao.findAll();
+		List<GetAllStudentsResponse> response = students.stream()
+				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
+				.collect(Collectors.toList());
+		return new SuccessDataResult<List<GetAllStudentsResponse>>(StudentBusinessRules.getAllStudentBySorted(response),
 				Messages.studentsListMessage);
 	}
 
@@ -125,5 +112,35 @@ public class StudentManager implements StudentService {
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
+	}
+
+	@Override
+	public DataResult<GetByIdStudentResponse> getByIdStudent(int id) {
+		Student student = this.studentDao.findById(id).orElseThrow();
+		return new SuccessDataResult<GetByIdStudentResponse>(
+				this.mapperService.forResponse().map(student, GetByIdStudentResponse.class),
+				Messages.studentListMessage);
+	}
+
+	@Override
+	public DataResult<GetByIdStudentResponse> findByStudentNumberAndPassword(LogInStudent login) {
+		Student student = this.studentDao.findByStudentNumberAndPassword(login.getStudentNumber(), login.getPassword());
+		if (student != null) {
+			return new SuccessDataResult<GetByIdStudentResponse>(
+					this.mapperService.forResponse().map(student, GetByIdStudentResponse.class),
+					Messages.studentListMessage);
+		} else {
+			return new ErrorDataResult<GetByIdStudentResponse>(Messages.notFindStudent);
+		}
+	}
+
+	@Override
+	public DataResult<GetAllStudentsResponse> getByStudentNumberStudent(String studentNumber) {
+		Student student = this.studentDao.findByStudentNumber(studentNumber);
+		return student != null
+				? new SuccessDataResult<GetAllStudentsResponse>(
+						this.mapperService.forResponse().map(student, GetAllStudentsResponse.class),
+						Messages.studentListMessage)
+				: new ErrorDataResult<GetAllStudentsResponse>(Messages.notFindStudent);
 	}
 }

@@ -2,18 +2,25 @@ package myproject.ekampus.dataAccess.abstracts;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import myproject.ekampus.entities.concretes.Student;
-import myproject.ekampus.entities.dtos.StudentDetailDto;
 
-public interface StudentDao extends JpaRepository<Student, Integer>{
-			
-	//List<Student> findByFirstNameContains(String studentName);
+import myproject.ekampus.entities.concretes.Student;
+
+public interface StudentDao extends JpaRepository<Student, Integer> {
+
+	/*
+	 * @Query("Select new myproject.ekampus.entities.dtos.StudentDetailDto" +
+	 * "(s.id,s.studentNumber,s.departmantName,s.firstName,s.lastName,s.password,s.studentPhotoPath) "
+	 * + "From Student s") List<StudentDetailDto> getAllStudent();
+	 */
+
+	List<Student> findByFirstNameContains(String name);
+
+	List<Student> findByFirstNameStartsWith(String name);
+
+	Student findByFirstName(String name);
 	
-	//List<Student> getByFirstNameStartsWith(String studentName);
+	Student findByStudentNumberAndPassword(String studentNumber, String password);
 	
-	@Query("Select new myproject.ekampus.entities.dtos.StudentDetailDto"
-			+ "(s.id,s.studentNumber,s.departmantName,s.firstName,s.lastName,s.password,s.studentPhotoPath) "
-			+ "From Student s")
-	List<StudentDetailDto> getAllStudent();
+	Student findByStudentNumber(String studentNumber);
+
 }

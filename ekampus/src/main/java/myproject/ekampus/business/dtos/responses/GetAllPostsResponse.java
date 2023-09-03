@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class GetAllPostsResponse {
 
 	private int studentId; 
+	private String studentNumber; 
 	private String comment;
 	private String postPhotoPath;
 	private String firstName;

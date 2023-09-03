@@ -3,8 +3,9 @@ package myproject.ekampus.business.BusinessRules;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.entities.concretes.Student;
-import myproject.ekampus.entities.dtos.StudentDetailDto;
 
 public class StudentBusinessRules {
 	
@@ -27,10 +28,10 @@ public class StudentBusinessRules {
 		return false;
 	}
 	
-	public static List<StudentDetailDto> getAllStudentBySorted(List<StudentDetailDto> sortedList){
+	public static List<GetAllStudentsResponse> getAllStudentBySorted(List<GetAllStudentsResponse> sortedList){
 
-		Collections.sort(sortedList,new Comparator<StudentDetailDto>() {
-			public int compare(StudentDetailDto student1, StudentDetailDto student2) {
+		Collections.sort(sortedList,new Comparator<GetAllStudentsResponse>() {
+			public int compare(GetAllStudentsResponse student1, GetAllStudentsResponse student2) {
 				String firstName = student1.getFirstName();
 				String firstName2 = student2.getFirstName();
 				return firstName.compareTo(firstName2);

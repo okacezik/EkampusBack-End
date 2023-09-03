@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
+import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
-import myproject.ekampus.entities.dtos.StudentDetailDto;
 
 @RestController
 @RequestMapping("/api/students")
@@ -36,52 +37,44 @@ public class StudentsController {
 		return this.studentService.delete(password, studentNumber);
 	}
 	
-	/*
-	@GetMapping("/getAll")
-	public DataResult<List<Student>> getAll(){
-		return this.studentService.getAll();
-	}
-	*/
-	
-	@PostMapping("/entry")
-	public DataResult<Boolean> entryStudent(@RequestParam("password") String password,@RequestParam("studentNumber") String studentNumber) {
-		return this.studentService.entryStudent(password, studentNumber);
-	}
-	
 	@GetMapping("getByStudentFirstName")
-	public DataResult<StudentDetailDto> getByFirstName(@RequestParam String firstName){
+	public DataResult<GetAllStudentsResponse> getByFirstName(@RequestParam String firstName){
 		return this.studentService.findByStudentName(firstName);
 	}
 	
 	@GetMapping("/getByFirstNameContains")
-	public DataResult<List<StudentDetailDto>> getByStudentNameContains(@RequestParam String studentName){
+	public DataResult<List<GetAllStudentsResponse>> getByStudentNameContains(@RequestParam String studentName){
 		return this.studentService.findByStudentNameContains(studentName);
 	}
 	
 
 	@GetMapping("/getByFirstNameStartsWith")
-	public DataResult<List<StudentDetailDto>> getByFirstNameStartsWith(@RequestParam String studentName){
-		return this.studentService.getByFirstNameStartsWith(studentName);
+	public DataResult<List<GetAllStudentsResponse>> getByFirstNameStartsWith(@RequestParam String studentName){
+		return this.studentService.findByFirstNameStartsWith(studentName);
 	}
-	/*
-	@GetMapping("/getAllStudents")
-	public DataResult<List<StudentDetailDto>> getAllStudent(){
-		return this.studentService.getAllStudent();
-	}
-	*/
 	
 	@GetMapping("/getAllStudents")
 	public DataResult<List<GetAllStudentsResponse>> getAllStudent(){
 		return this.studentService.getAllStudents();
 	}
 	
-	@GetMapping("/getStudentByStudentId")
-	public DataResult<StudentDetailDto> getStudentByStudentId(@RequestParam int id){
-		return this.studentService.findByStudentId(id);
+	@GetMapping("/getByIdStudent")
+	public DataResult<GetByIdStudentResponse> getStudentByStudentId(@RequestParam int id){
+		return this.studentService.getByIdStudent(id);
 	}
 	
 	@GetMapping("/getAllStudentBySorted")
-	public DataResult<List<StudentDetailDto>> getAllStudentBySorted(){
+	public DataResult<List<GetAllStudentsResponse>> getAllStudentBySorted(){
 		return this.studentService.getAllStudentBySorted();
+	}
+	
+	@PostMapping("/entry")
+	public DataResult<GetByIdStudentResponse> entryStudent2(@RequestBody LogInStudent login) {
+		 return this.studentService.findByStudentNumberAndPassword(login);
+	}
+	
+	@GetMapping("/getByStudentNumberStudent")
+	public DataResult<GetAllStudentsResponse> getByStudentNumberStudent(@RequestParam String studentNumber){
+		return this.studentService.getByStudentNumberStudent(studentNumber);
 	}
 }
