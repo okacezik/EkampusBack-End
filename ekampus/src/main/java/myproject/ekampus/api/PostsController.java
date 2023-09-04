@@ -43,7 +43,7 @@ public class PostsController {
 	
 	@GetMapping("/getPostsByStudentId")
 	public DataResult<List<GetAllPostsResponse>> getPostsByStudentId(@RequestParam int studentId){
-		return this.postService.getPostWithStudentDetails(studentId);
+		return this.postService.findByStudentIdPosts(studentId);
 	}
 	
 	@GetMapping("/getPostDetailsBySort")
@@ -53,6 +53,6 @@ public class PostsController {
 	
 	@GetMapping("/getPostsByStudentNumber")
 	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber){
-		return this.postService.findByStudent_StudentNumber(studentNumber);
+		return this.postService.findByStudentNumberPosts(studentNumber);
 	}
 }

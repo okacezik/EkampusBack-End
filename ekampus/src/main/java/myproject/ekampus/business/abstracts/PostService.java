@@ -17,8 +17,8 @@ public interface PostService {
 
 	DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate();
 
-	DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails(int studentId);
+	DataResult<List<GetAllPostsResponse>> findByStudentNumberPosts(String studentNumber);
 
-	DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber);
+	DataResult<List<GetAllPostsResponse>> findByStudentIdPosts(int id);
 
 }

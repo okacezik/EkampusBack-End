@@ -19,4 +19,6 @@ public interface PostDao extends JpaRepository<Post, Integer>{
 	*/
 	
 	List<Post> findByStudent_StudentNumber(String studentNumber);
+	
+	List<Post> findByStudent_Id(int id);
 }

@@ -12,6 +12,7 @@ import myproject.ekampus.business.dtos.requests.CreatePostRequest;
 import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
+import myproject.ekampus.core.utilites.results.ErrorDataResult;
 import myproject.ekampus.core.utilites.results.ErrorResult;
 import myproject.ekampus.core.utilites.results.Result;
 import myproject.ekampus.core.utilites.results.SuccessDataResult;
@@ -69,26 +70,30 @@ public class PostManager implements PostService {
 	}
 
 	@Override
-	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails(int studentId) {
+	public DataResult<List<GetAllPostsResponse>> findByStudentNumberPosts(String studentNumber) {
+		List<Post> posts = this.postDao.findByStudent_StudentNumber(studentNumber);
 
-		List<Post> posts = this.postDao.findAll();
-		List<Post> studentPosts = posts.stream().filter(post -> post.getStudent().getId() == studentId)
-				.collect(Collectors.toList());
+		if (posts.size() > 0) {
+			List<GetAllPostsResponse> response = posts.stream()
+					.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
+					.collect(Collectors.toList());
 
-		List<GetAllPostsResponse> response = studentPosts.stream()
-				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
-				.collect(Collectors.toList());
+			return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
+		} else {
+			return new ErrorDataResult<>(Messages.notFindPost);
+		}
 
-		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
 	}
 
 	@Override
-	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber) {
-		List<Post> posts = this.postDao.findByStudent_StudentNumber(studentNumber);
-		List<GetAllPostsResponse> response = posts.stream()
-				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
-				.collect(Collectors.toList());
-		
-		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
+	public DataResult<List<GetAllPostsResponse>> findByStudentIdPosts(int id) {
+		List<Post> posts = this.postDao.findByStudent_Id(id);
+		if (posts.size() > 0) {
+			return new SuccessDataResult<List<GetAllPostsResponse>>(
+					posts.stream().map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
+							.collect(Collectors.toList()),
+					Messages.postsListMessage);
+		}
+		return new ErrorDataResult<>(Messages.notFindPost);
 	}
 }
