@@ -38,8 +38,8 @@ public class StudentsController {
 	}
 	
 	@GetMapping("getByStudentFirstName")
-	public DataResult<GetAllStudentsResponse> getByFirstName(@RequestParam String firstName){
-		return this.studentService.findByStudentName(firstName);
+	public DataResult<GetAllStudentsResponse> findByStudentFirstName(@RequestParam String firstName){
+		return this.studentService.findByStudentFirstName(firstName);
 	}
 	
 	@GetMapping("/getByFirstNameContains")
@@ -59,7 +59,7 @@ public class StudentsController {
 	}
 	
 	@GetMapping("/getByIdStudent")
-	public DataResult<GetByIdStudentResponse> getStudentByStudentId(@RequestParam int id){
+	public DataResult<GetByIdStudentResponse> getByStudentId(@RequestParam int id){
 		return this.studentService.getByIdStudent(id);
 	}
 	

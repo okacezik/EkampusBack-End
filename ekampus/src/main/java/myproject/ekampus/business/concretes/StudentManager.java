@@ -1,6 +1,7 @@
 package myproject.ekampus.business.concretes;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -64,34 +65,49 @@ public class StudentManager implements StudentService {
 	}
 
 	@Override
-	public DataResult<GetAllStudentsResponse> findByStudentName(String firstName) {
+	public DataResult<GetAllStudentsResponse> findByStudentFirstName(String firstName) {
 
 		Student student = this.studentDao.findByFirstName(firstName);
-		return new SuccessDataResult<GetAllStudentsResponse>(
-				this.mapperService.forResponse().map(student, GetAllStudentsResponse.class),
-				Messages.studentListMessage);
+		return student != null
+				? new SuccessDataResult<GetAllStudentsResponse>(
+						this.mapperService.forResponse().map(student, GetAllStudentsResponse.class),
+						Messages.studentListMessage)
+				:
+
+				new ErrorDataResult<>(Messages.notFindStudent);
 	}
 
 	@Override
 	public DataResult<List<GetAllStudentsResponse>> findByStudentNameContains(String studentName) {
 
 		List<Student> students = this.studentDao.findByFirstNameContains(studentName);
-		List<GetAllStudentsResponse> response = students.stream()
-				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
-				.collect(Collectors.toList());
+		if (students.size() > 0) {
+			List<GetAllStudentsResponse> response = students.stream()
+					.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
+					.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
+			return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
+		} else {
+			return new ErrorDataResult<>(Messages.notFindStudent);
+		}
+
 	}
 
 	@Override
 	public DataResult<List<GetAllStudentsResponse>> findByFirstNameStartsWith(String studentName) {
 
 		List<Student> students = this.studentDao.findByFirstNameStartsWith(studentName);
-		List<GetAllStudentsResponse> response = students.stream()
-				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
-				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
+		if (students.size() > 0) {
+			List<GetAllStudentsResponse> response = students.stream()
+					.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
+					.collect(Collectors.toList());
+
+			return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
+		} else {
+			return new ErrorDataResult<>(Messages.notFindStudent);
+		}
+
 	}
 
 	@Override
@@ -116,10 +132,13 @@ public class StudentManager implements StudentService {
 
 	@Override
 	public DataResult<GetByIdStudentResponse> getByIdStudent(int id) {
-		Student student = this.studentDao.findById(id).orElseThrow();
-		return new SuccessDataResult<GetByIdStudentResponse>(
-				this.mapperService.forResponse().map(student, GetByIdStudentResponse.class),
-				Messages.studentListMessage);
+		Optional<Student> student = this.studentDao.findById(id);
+
+		return student.isPresent() == true
+				? new SuccessDataResult<GetByIdStudentResponse>(
+						this.mapperService.forResponse().map(student, GetByIdStudentResponse.class),
+						Messages.studentListMessage)
+				: new ErrorDataResult<GetByIdStudentResponse>(Messages.notFindStudent);
 	}
 
 	@Override

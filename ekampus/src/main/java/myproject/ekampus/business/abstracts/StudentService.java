@@ -21,7 +21,7 @@ public interface StudentService {
 
 	DataResult<GetAllStudentsResponse> getByStudentNumberStudent(String studentNumber);
 
-	DataResult<GetAllStudentsResponse> findByStudentName(String studentName);
+	DataResult<GetAllStudentsResponse> findByStudentFirstName(String studentName);
 
 	DataResult<List<GetAllStudentsResponse>> findByStudentNameContains(String studentName);
 
