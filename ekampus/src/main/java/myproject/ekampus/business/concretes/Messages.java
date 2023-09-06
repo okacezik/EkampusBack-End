@@ -17,5 +17,12 @@ public class Messages {
 	static String postDeleteMessage = "The post has been deleted...";
 	static String postsListMessage = "The posts are listed...";
 	static String notFindPost = "Did not find the post...";
+	
+	//These messages are about friendship requests
+	static String requestSend = "Request send successfully";
+	static String notRequestSend = "Not reguest send";
+	static String requestsListed = "Requests listed";
+	static String requestsDeleted = "Request deleted";
+	static String requestAccepted = "Request accepted";
 
 }
