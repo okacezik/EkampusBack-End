@@ -2,6 +2,7 @@ package myproject.ekampus.api;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,8 @@ import myproject.ekampus.core.utilites.results.Result;
 @RestController
 @RequestMapping("/api/friendship")
 @AllArgsConstructor
+@CrossOrigin
+
 public class FriendshipRequestController {
 
 	private FriendshipRequestService friendshipRequestService;
@@ -41,7 +44,7 @@ public class FriendshipRequestController {
 		return this.friendshipRequestService.deleteFriendshipResultBySender(deleteFriendshipRequest);
 	}
 	
-	@PutMapping()
+	@PutMapping("/acceptrequest")
 	public Result acceptFriendshipRequest(AcceptFriendshipRequest acceptFriendshipRequest) {
 		return this.friendshipRequestService.acceptFriendshipRequest(acceptFriendshipRequest);
 	}

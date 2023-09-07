@@ -11,5 +11,4 @@ public class RejectFriendshipRequest {
 
 	private String senderStudentNumber;
 	private String receiverStudentNumber;
-	private boolean isAccept = false;
 }

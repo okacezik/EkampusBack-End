@@ -7,13 +7,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.FriendshipRequestService;
-import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.AcceptFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.CreateSendFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.DeleteFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.RejectFriendshipRequest;
 import myproject.ekampus.business.dtos.responses.GetAllFriendshipRequestByStudentNumber;
-import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorResult;
@@ -29,23 +27,21 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 
 	private FriendshipRequestDao friendshipRequestDao;
 	private ModelMapperService modelMapperService;
-	private StudentService studentService;
 
 	@Override
 	public Result sendFriendshipRequest(CreateSendFriendshipRequest createSendFriendshipRequest) {
 
-		DataResult<GetAllStudentsResponse> receiver = this.studentService
-				.getByStudentNumberStudent(createSendFriendshipRequest.getReceiverStudentNumber());
-		DataResult<GetAllStudentsResponse> sender = this.studentService
-				.getByStudentNumberStudent(createSendFriendshipRequest.getSenderStudentNumber());
+		FriendshipRequest request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
+				createSendFriendshipRequest.getReceiverStudentNumber(),
+				createSendFriendshipRequest.getSenderStudentNumber());
 
-		if (receiver.isSuccess() && sender.isSuccess()) {
-			FriendshipRequest friendshipRequest = this.modelMapperService.forRequest().map(createSendFriendshipRequest,
+		if (request == null) {
+			FriendshipRequest newRequest = this.modelMapperService.forRequest().map(createSendFriendshipRequest,
 					FriendshipRequest.class);
-
-			this.friendshipRequestDao.save(friendshipRequest);
+			this.friendshipRequestDao.save(newRequest);
 			return new SuccessResult(Messages.requestSend);
 		}
+
 		return new ErrorResult(Messages.notRequestSend);
 	}
 
