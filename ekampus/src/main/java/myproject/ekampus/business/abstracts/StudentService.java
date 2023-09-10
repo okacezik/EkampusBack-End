@@ -3,6 +3,7 @@ package myproject.ekampus.business.abstracts;
 import java.util.List;
 
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
@@ -33,4 +34,7 @@ public interface StudentService {
 
 	DataResult<GetByIdStudentResponse> findByStudentNumberAndPassword(LogInStudent login);
 
+	Result hiddenAccountRequest(HiddenAccountRequest hiddenAccountRequest);
+	
+	DataResult<Boolean> isHiddenAccountByStudentNumber(String studentNumber);
 }

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import myproject.ekampus.business.BusinessRules.StudentBusinessRules;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
@@ -162,5 +163,21 @@ public class StudentManager implements StudentService {
 						Messages.studentListMessage)
 				: new ErrorDataResult<GetAllStudentsResponse>(Messages.notFindStudent);
 	}
-	
+
+	@Override
+	public Result hiddenAccountRequest(HiddenAccountRequest hiddenAccountRequest) {
+
+		Student student = this.studentDao.findByStudentNumber(hiddenAccountRequest.getStudentNumber());
+		student.setHiddenAccount(true);
+		this.studentDao.save(student);
+		return new SuccessResult("GÜNCELLENDİ");
+	}
+
+	@Override
+	public DataResult<Boolean> isHiddenAccountByStudentNumber(String studentNumber) {
+		Student student = this.studentDao.findByStudentNumber(studentNumber);
+
+		return new SuccessDataResult<Boolean>(student.isHiddenAccount(), studentNumber);
+	}
+
 }

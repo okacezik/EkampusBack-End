@@ -15,18 +15,21 @@ import myproject.ekampus.core.utilites.results.Result;
 public interface FriendshipRequestService {
 
 	Result sendFriendshipRequest(CreateSendFriendshipRequest createSendFriendshipRequest);
-	
+
 	Result deleteFriendshipResultBySender(DeleteFriendshipRequest deleteFriendshipRequest);
-	
+
 	Result acceptFriendshipRequest(AcceptFriendshipRequest acceptFriendshipRequest);
-	
+
 	Result rejectFriendshipRequest(RejectFriendshipRequest rejectFriendshipRequest);
-	
+
 	Result removeFriendship(String entryStudentNumber, String studentNumber);
-	
+
 	DataResult<List<GetAllFriendshipRequestByStudentNumber>> getAllRequestsByStudentNumber(String studentNumber);
-	
+
 	DataResult<List<GetAllFriendshipByStudentNumber>> getAllFriendshipByStudentNumber(String studentNumber);
 
 	DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber);
+	
+	DataResult<Boolean> areWeFriends(String studentNumber, String otherStudentNumber);
+
 }

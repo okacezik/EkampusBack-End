@@ -70,5 +70,10 @@ public class FriendshipRequestController {
 	public DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber){
 		return this.friendshipRequestService.getAllMySendFriendship(studentNumber);
 	}
+	
+	@GetMapping("/areWeFriends")
+	public DataResult<Boolean> areWeFriends(String studentNumber, String otherStudentNumber) {
+		return this.friendshipRequestService.areWeFriends(studentNumber, otherStudentNumber);
+	}
  
 }

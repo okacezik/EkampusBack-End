@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
@@ -76,5 +78,15 @@ public class StudentsController {
 	@GetMapping("/getByStudentNumberStudent")
 	public DataResult<GetAllStudentsResponse> getByStudentNumberStudent(@RequestParam String studentNumber){
 		return this.studentService.getByStudentNumberStudent(studentNumber);
+	}
+	
+	@PutMapping("/hiddenAccountRequest")
+	public Result hiddenAccountRequest(@RequestBody HiddenAccountRequest hiddenAccountRequest) {
+		return this.studentService.hiddenAccountRequest(hiddenAccountRequest);
+	}
+	
+	@GetMapping("/isHiddenAccount")
+	public DataResult<Boolean> isHiddenAccountByStudentNumber(@RequestParam String studentNumber){
+		return this.studentService.isHiddenAccountByStudentNumber(studentNumber);
 	}
 }

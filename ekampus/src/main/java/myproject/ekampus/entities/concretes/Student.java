@@ -45,4 +45,8 @@ public class Student {
 	
 	@OneToMany(mappedBy = "student")
 	private List<Post> posts;
+	
+	@Column(name = "hidden_account")
+	private boolean hiddenAccount=false;
+	
 }

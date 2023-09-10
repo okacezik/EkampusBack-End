@@ -132,6 +132,7 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 	@Override
 	public DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber) {
 		List<FriendshipRequest> requests = this.friendshipRequestDao.findBySenderStudentNumber(studentNumber);
+		requests = requests.stream().filter(request -> !request.isAccept()).collect(Collectors.toList());
 		List<GetAllMySendRequestByStudentNumber> mySendRequests = requests.stream()
 				.map(request -> this.modelMapperService.forResponse().map(request,
 						GetAllMySendRequestByStudentNumber.class))
@@ -140,5 +141,28 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 		return new SuccessDataResult<List<GetAllMySendRequestByStudentNumber>>(mySendRequests,
 				Messages.requestsListed);
 	}
+
+	@Override
+	public DataResult<Boolean> areWeFriends(String studentNumber, String otherStudentNumber) {
+		FriendshipRequest friendshipRequest = this.friendshipRequestDao.findById(otherStudentNumber+studentNumber);
+		if(friendshipRequest != null) {
+			if (friendshipRequest.isAccept()) {
+				return new SuccessDataResult<Boolean>(true, "We are friends");
+			}else {
+				return new SuccessDataResult<Boolean>(false, "We are not friends");
+			}
+		}
+		friendshipRequest = this.friendshipRequestDao.findById(studentNumber+otherStudentNumber);
+		if(friendshipRequest != null) {
+			if (friendshipRequest.isAccept()) {
+				return new SuccessDataResult<Boolean>(true, "We are friends");
+			}else {
+				return new SuccessDataResult<Boolean>(false, "We are not friends");
+			}
+		}
+		
+		return new SuccessDataResult<Boolean>(false, "We are not friends");
+	}
+
 
 }
