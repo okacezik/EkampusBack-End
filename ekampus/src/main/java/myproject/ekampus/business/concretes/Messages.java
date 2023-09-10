@@ -24,5 +24,6 @@ public class Messages {
 	static String requestsListed = "Requests listed";
 	static String requestsDeleted = "Request deleted";
 	static String requestAccepted = "Request accepted";
+	static String notRequestDeleted = "Not Request Deleted";
 
 }

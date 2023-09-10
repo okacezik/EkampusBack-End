@@ -11,7 +11,9 @@ import myproject.ekampus.business.dtos.requests.AcceptFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.CreateSendFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.DeleteFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.RejectFriendshipRequest;
+import myproject.ekampus.business.dtos.responses.GetAllFriendshipByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllFriendshipRequestByStudentNumber;
+import myproject.ekampus.business.dtos.responses.GetAllMySendRequestByStudentNumber;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorResult;
@@ -31,13 +33,15 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 	@Override
 	public Result sendFriendshipRequest(CreateSendFriendshipRequest createSendFriendshipRequest) {
 
-		FriendshipRequest request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
-				createSendFriendshipRequest.getReceiverStudentNumber(),
-				createSendFriendshipRequest.getSenderStudentNumber());
+		FriendshipRequest request = this.friendshipRequestDao
+				.findById(createSendFriendshipRequest.getSenderStudentNumber()
+						+ createSendFriendshipRequest.getReceiverStudentNumber());
 
 		if (request == null) {
 			FriendshipRequest newRequest = this.modelMapperService.forRequest().map(createSendFriendshipRequest,
 					FriendshipRequest.class);
+
+			newRequest.setId(newRequest.getSenderStudentNumber() + newRequest.getReceiverStudentNumber());
 			this.friendshipRequestDao.save(newRequest);
 			return new SuccessResult(Messages.requestSend);
 		}
@@ -86,6 +90,55 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 				rejectFriendshipRequest.getReceiverStudentNumber(), rejectFriendshipRequest.getSenderStudentNumber());
 		this.friendshipRequestDao.delete(request);
 		return new SuccessResult(Messages.requestsDeleted);
+	}
+
+	@Override
+	public DataResult<List<GetAllFriendshipByStudentNumber>> getAllFriendshipByStudentNumber(String studentNumber) {
+		List<FriendshipRequest> friendships = this.friendshipRequestDao.findByIdContains(studentNumber);
+
+		List<FriendshipRequest> filteredFriendships = friendships.stream().filter(friendship -> friendship.isAccept())
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<GetAllFriendshipByStudentNumber>>(
+				filteredFriendships.stream()
+						.map(friendship -> this.modelMapperService.forResponse().map(friendship,
+								GetAllFriendshipByStudentNumber.class))
+						.collect(Collectors.toList()),
+				Messages.requestsListed);
+
+	}
+
+	@Override
+	public Result removeFriendship(String entryStudentNumber, String studentNumber) {
+		FriendshipRequest friendship = this.friendshipRequestDao.findById(entryStudentNumber + studentNumber);
+		if (friendship == null) {
+			friendship = this.friendshipRequestDao.findById(studentNumber + entryStudentNumber);
+			if (friendship != null) {
+				FriendshipRequest currentFriendship = this.modelMapperService.forRequest().map(friendship,
+						FriendshipRequest.class);
+				this.friendshipRequestDao.delete(currentFriendship);
+				return new SuccessResult(Messages.requestsDeleted);
+			} else {
+				return new ErrorResult(Messages.notRequestDeleted);
+			}
+
+		}
+		FriendshipRequest currentFriendship = this.modelMapperService.forRequest().map(friendship,
+				FriendshipRequest.class);
+		this.friendshipRequestDao.delete(currentFriendship);
+		return new SuccessResult(Messages.requestsDeleted);
+	}
+
+	@Override
+	public DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber) {
+		List<FriendshipRequest> requests = this.friendshipRequestDao.findBySenderStudentNumber(studentNumber);
+		List<GetAllMySendRequestByStudentNumber> mySendRequests = requests.stream()
+				.map(request -> this.modelMapperService.forResponse().map(request,
+						GetAllMySendRequestByStudentNumber.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<GetAllMySendRequestByStudentNumber>>(mySendRequests,
+				Messages.requestsListed);
 	}
 
 }

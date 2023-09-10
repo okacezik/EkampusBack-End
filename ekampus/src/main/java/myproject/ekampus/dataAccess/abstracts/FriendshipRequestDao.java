@@ -12,4 +12,10 @@ public interface FriendshipRequestDao extends JpaRepository<FriendshipRequest, I
 
 	FriendshipRequest findByReceiverStudentNumberAndSenderStudentNumber(String receiverStudentNumber,
 			String senderStudentNumber);
+	
+	FriendshipRequest findById(String id);
+	
+	List<FriendshipRequest> findByIdContains(String studentNumber);
+	
+	List<FriendshipRequest> findBySenderStudentNumber(String studentNumber);
 }

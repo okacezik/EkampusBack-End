@@ -16,7 +16,9 @@ import myproject.ekampus.business.dtos.requests.AcceptFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.CreateSendFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.DeleteFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.RejectFriendshipRequest;
+import myproject.ekampus.business.dtos.responses.GetAllFriendshipByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllFriendshipRequestByStudentNumber;
+import myproject.ekampus.business.dtos.responses.GetAllMySendRequestByStudentNumber;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
@@ -29,29 +31,44 @@ public class FriendshipRequestController {
 
 	private FriendshipRequestService friendshipRequestService;
 	
-	@PostMapping()
+	@PostMapping("/sendRequest")
 	public Result sendFriendshipRequest(CreateSendFriendshipRequest createSendFriendshipRequest) {
 		return this.friendshipRequestService.sendFriendshipRequest(createSendFriendshipRequest);
 	}
 	
-	@GetMapping()
+	@GetMapping("/getActiveRequests")
 	public DataResult<List<GetAllFriendshipRequestByStudentNumber>> getAllRequestsByStudentNumber(String studentNumber){
 		return this.friendshipRequestService.getAllRequestsByStudentNumber(studentNumber);
 	}
 	
-	@DeleteMapping("/pullbackrequest")
+	@DeleteMapping("/pullBackRequest")
 	public Result deleteFriendshipResultBySender(DeleteFriendshipRequest deleteFriendshipRequest) {
 		return this.friendshipRequestService.deleteFriendshipResultBySender(deleteFriendshipRequest);
 	}
 	
-	@PutMapping("/acceptrequest")
+	@PutMapping("/acceptRequest")
 	public Result acceptFriendshipRequest(AcceptFriendshipRequest acceptFriendshipRequest) {
 		return this.friendshipRequestService.acceptFriendshipRequest(acceptFriendshipRequest);
 	}
 	
-	@DeleteMapping("/rejectfriendship")
+	@DeleteMapping("/rejectFriendship")
 	public Result rejectFriendshipRequest(RejectFriendshipRequest rejectFriendshipRequest) {
 		return this.friendshipRequestService.rejectFriendshipRequest(rejectFriendshipRequest);
+	}
+	
+	@DeleteMapping("/removeFriendship")
+	public Result removeFriendship(String entryStudentNumber, String studentNumber) {
+		return this.friendshipRequestService.removeFriendship(entryStudentNumber, studentNumber);
+	}
+	
+	@GetMapping("/getFriendshipsByStudentNumber")
+	public DataResult<List<GetAllFriendshipByStudentNumber>> getAllFriendshipByStudentNumber(String studentNumber){
+		return this.friendshipRequestService.getAllFriendshipByStudentNumber(studentNumber);
+	}
+	
+	@GetMapping("/getMySendRequests")
+	public DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber){
+		return this.friendshipRequestService.getAllMySendFriendship(studentNumber);
 	}
  
 }
