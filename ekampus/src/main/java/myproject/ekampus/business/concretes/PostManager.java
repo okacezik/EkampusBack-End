@@ -1,12 +1,14 @@
 package myproject.ekampus.business.concretes;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import myproject.ekampus.business.BusinessRules.PostBusinessRules;
 import myproject.ekampus.business.abstracts.PostService;
 import myproject.ekampus.business.dtos.requests.CreatePostRequest;
 import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
@@ -25,7 +27,6 @@ import myproject.ekampus.entities.concretes.Post;
 public class PostManager implements PostService {
 
 	private PostDao postDao;
-	private List<Post> posts;
 	private ModelMapperService mapperService;
 
 	@Override
@@ -36,27 +37,27 @@ public class PostManager implements PostService {
 	}
 
 	@Override
-	public Result delete(int postId, int ownerId) {
+	public Result delete(int postId) {
 
-		Post post = PostBusinessRules.existPostControl(posts, postId);
+		Optional<Post> post = this.postDao.findById(postId);
 
-		if (post == null) {
-			return new ErrorResult(Messages.notFindPost);
-		} else {
-			this.postDao.delete(post);
+		if (post.isPresent()) {
+			this.postDao.deleteById(postId);
 			return new SuccessResult(Messages.postDeleteMessage);
 		}
+		return new ErrorResult(Messages.notFindPost);
 	}
 
 	@Override
 	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate() {
-		List<Post> posts = this.postDao.findAll();
+
+		Sort sort = Sort.by(Direction.DESC, "loadDate");
+		List<Post> posts = this.postDao.findAll(sort);
 		List<GetAllPostsResponse> response = posts.stream()
 				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<GetAllPostsResponse>>(PostBusinessRules.getAllPostByReverse(response),
-				Messages.postsListMessage);
+		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
 	}
 
 	@Override

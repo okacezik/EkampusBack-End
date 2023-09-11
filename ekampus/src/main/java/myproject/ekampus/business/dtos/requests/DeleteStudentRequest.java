@@ -9,15 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AcceptFriendshipRequest {
+public class DeleteStudentRequest {
+
+	@NotNull
+	@NotBlank
+	private String studentNumber;
 	
 	@NotNull
 	@NotBlank
-	private String senderStudentNumber;
-	
-	@NotNull
-	@NotBlank
-	private String receiverStudentNumber;
-	
-	private boolean isAccept = true;
+	private String password;
+
 }

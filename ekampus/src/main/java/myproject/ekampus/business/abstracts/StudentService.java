@@ -3,6 +3,7 @@ package myproject.ekampus.business.abstracts;
 import java.util.List;
 
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.DeleteStudentRequest;
 import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
@@ -14,9 +15,7 @@ public interface StudentService {
 
 	Result add(CreateStudentRequest createStudentRequest);
 
-	Result delete(String password, String studentNumber);
-
-	DataResult<Boolean> entryStudent(String password, String studentNumber);
+	Result delete(DeleteStudentRequest deleteStudentRequest);
 
 	DataResult<GetByIdStudentResponse> getByIdStudent(int id);
 

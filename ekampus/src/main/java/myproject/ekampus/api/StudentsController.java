@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.DeleteStudentRequest;
 import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
@@ -35,8 +36,8 @@ public class StudentsController {
 	}
 	
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam("password") String password,@RequestParam("studentNumber") String studentNumber) {
-		return this.studentService.delete(password, studentNumber);
+	public Result delete(@RequestBody DeleteStudentRequest deleteStudentRequest) {
+		return this.studentService.delete(deleteStudentRequest);
 	}
 	
 	@GetMapping("getByStudentFirstName")

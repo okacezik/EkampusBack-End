@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import myproject.ekampus.business.BusinessRules.StudentBusinessRules;
 import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.requests.DeleteStudentRequest;
 import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
@@ -29,40 +31,31 @@ import myproject.ekampus.entities.concretes.Student;
 public class StudentManager implements StudentService {
 
 	private StudentDao studentDao;
-	private List<Student> students;
 	private ModelMapperService mapperService;
 
 	@Override
 	public Result add(CreateStudentRequest createStudentRequest) {
-		Student student = this.mapperService.forRequest().map(createStudentRequest, Student.class);
-		boolean result = StudentBusinessRules.addStudentControl(students, student);
-		if (result) {
-			return new ErrorResult(Messages.existStudentForAddOperation);
-		} else {
+		Student student = this.studentDao.findByStudentNumber(createStudentRequest.getStudentNumber());
+
+		if (student == null) {
+			student = this.mapperService.forRequest().map(createStudentRequest, Student.class);
 			this.studentDao.save(student);
 			return new SuccessResult(Messages.studentAddMessage);
 		}
+
+		return new ErrorResult(Messages.existStudentForAddOperation);
 	}
 
 	@Override
-	public Result delete(String password, String studentNumber) {
+	public Result delete(DeleteStudentRequest deleteStudentRequest) {
 
-		Student result = StudentBusinessRules.existStudentControl(students, studentNumber, password);
-		if (result != null) {
-			this.studentDao.delete(result);
-			return new SuccessResult(Messages.studentDeleteMessage);
-		} else {
+		Student student = this.studentDao.findByStudentNumber(deleteStudentRequest.getStudentNumber());
+		if (student == null) {
 			return new ErrorResult(Messages.notFindStudent);
+		} else {
+			this.studentDao.delete(student);
+			return new SuccessResult(Messages.studentDeleteMessage);
 		}
-	}
-
-	@Override
-	public DataResult<Boolean> entryStudent(String password, String studentNumber) {
-		Student result = StudentBusinessRules.existStudentControl(students, studentNumber, password);
-		if (result != null) {
-			return new SuccessDataResult<Boolean>(true, Messages.welcomeStudent);
-		}
-		return new ErrorDataResult<Boolean>(false, Messages.wrongUserİnformations);
 	}
 
 	@Override
@@ -88,9 +81,8 @@ public class StudentManager implements StudentService {
 					.collect(Collectors.toList());
 
 			return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
-		} else {
-			return new ErrorDataResult<>(Messages.notFindStudent);
 		}
+		return new ErrorDataResult<>(Messages.notFindStudent);
 
 	}
 
@@ -113,12 +105,14 @@ public class StudentManager implements StudentService {
 
 	@Override
 	public DataResult<List<GetAllStudentsResponse>> getAllStudentBySorted() {
-		List<Student> students = this.studentDao.findAll();
+
+		Sort sort = Sort.by(Direction.ASC, "firstName");
+
+		List<Student> students = this.studentDao.findAll(sort);
 		List<GetAllStudentsResponse> response = students.stream()
 				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<GetAllStudentsResponse>>(StudentBusinessRules.getAllStudentBySorted(response),
-				Messages.studentsListMessage);
+		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
 	}
 
 	@Override
@@ -170,7 +164,7 @@ public class StudentManager implements StudentService {
 		Student student = this.studentDao.findByStudentNumber(hiddenAccountRequest.getStudentNumber());
 		student.setHiddenAccount(true);
 		this.studentDao.save(student);
-		return new SuccessResult("GÜNCELLENDİ");
+		return new SuccessResult(Messages.handleHiddenAccount);
 	}
 
 	@Override

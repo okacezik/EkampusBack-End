@@ -11,6 +11,7 @@ public class Messages {
 	static String welcomeStudent = "Welcome to the system...";
 	static String wrongUserİnformations = "Wrong user informations!!";
 	static String existStudentForAddOperation = "There is already this student in the system...";
+	static String handleHiddenAccount = "User's account hidden";
 	
 	//These messages are about post(s)
 	static String postAddMessage = "The post has been loaded...";

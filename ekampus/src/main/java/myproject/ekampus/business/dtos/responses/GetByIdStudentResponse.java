@@ -14,6 +14,5 @@ public class GetByIdStudentResponse {
 	private String departmantName;
 	private String firstName;
 	private String lastName;
-	//private String password;
 	private String studentPhotoPath;
 }

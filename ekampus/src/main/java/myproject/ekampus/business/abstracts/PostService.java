@@ -11,7 +11,7 @@ public interface PostService {
 
 	Result add(CreatePostRequest createPostRequest);
 
-	Result delete(int postId, int ownerId);
+	Result delete(int postId);
 
 	DataResult<List<GetAllPostsResponse>> getAllPostsWithStudentDetails();
 
