@@ -62,7 +62,7 @@ public class StudentsController {
 	}
 
 	@GetMapping("/getAllStudents")
-	@Cacheable(value = "students" )
+	@Cacheable(value = "students" ,unless = "#result == null")
 	public DataResult<List<GetAllStudentsResponse>> getAllStudent() {
 		log.info("Getting students from DB");
 		return this.studentService.getAllStudents();

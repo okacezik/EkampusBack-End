@@ -9,7 +9,7 @@ import myproject.ekampus.core.utilites.results.Result;
 
 public interface PostService {
 
-	Result add(CreatePostRequest createPostRequest);
+	DataResult<List<GetAllPostsResponse>> add(CreatePostRequest createPostRequest);
 
 	Result delete(int postId);
 

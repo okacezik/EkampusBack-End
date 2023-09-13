@@ -30,10 +30,11 @@ public class PostManager implements PostService {
 	private ModelMapperService mapperService;
 
 	@Override
-	public Result add(CreatePostRequest createPostRequest) {
+	public DataResult<List<GetAllPostsResponse>> add(CreatePostRequest createPostRequest) {
 		Post post = this.mapperService.forRequest().map(createPostRequest, Post.class);
 		this.postDao.save(post);
-		return new SuccessResult(Messages.postAddMessage);
+
+		return this.getPostWithStudentDetailsSortedByLoadDate();
 	}
 
 	@Override
