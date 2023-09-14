@@ -34,20 +34,19 @@ public class PostsController {
 	private PostService postService;
 
 	@PostMapping("/add")
-	@CachePut(value = "posts", key = "1")   //key provides to store data unique
+	@CachePut(value = "posts", key = "1") // key provides to store data unique
 	public DataResult<List<GetAllPostsResponse>> add(@RequestBody CreatePostRequest createPostRequest) {
 		return this.postService.add(createPostRequest);
 	}
 
 	@DeleteMapping("/delete")
-	@CacheEvict(value = "posts", key = "1")
+	@CacheEvict(value = "posts", key = "1", condition = "#result.success != false")
 	public Result delete(@RequestParam int id) {
 		return this.postService.delete(id);
 	}
 
 	@GetMapping("/getPostWithStudentDetails")
 	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails() {
-		log.info("Getting posts 2 from DB");
 		return this.postService.getAllPostsWithStudentDetails();
 	}
 
@@ -66,5 +65,10 @@ public class PostsController {
 	@GetMapping("/getPostsByStudentNumber")
 	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber) {
 		return this.postService.findByStudentNumberPosts(studentNumber);
+	}
+	
+	@GetMapping("/getAllMyFriendsPosts")
+	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber){
+		return this.postService.getAllMyFriendsPostsWithStudentDetails(studentNumber);
 	}
 }

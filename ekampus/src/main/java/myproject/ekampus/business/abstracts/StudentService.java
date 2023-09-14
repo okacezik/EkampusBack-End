@@ -13,7 +13,7 @@ import myproject.ekampus.core.utilites.results.Result;
 
 public interface StudentService {
 
-	Result add(CreateStudentRequest createStudentRequest);
+	DataResult<List<GetAllStudentsResponse>> add(CreateStudentRequest createStudentRequest);
 
 	Result delete(DeleteStudentRequest deleteStudentRequest);
 

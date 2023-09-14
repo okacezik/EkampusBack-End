@@ -34,16 +34,16 @@ public class StudentManager implements StudentService {
 	private ModelMapperService mapperService;
 
 	@Override
-	public Result add(CreateStudentRequest createStudentRequest) {
+	public DataResult<List<GetAllStudentsResponse>> add(CreateStudentRequest createStudentRequest) {
 		Student student = this.studentDao.findByStudentNumber(createStudentRequest.getStudentNumber());
 
 		if (student == null) {
 			student = this.mapperService.forRequest().map(createStudentRequest, Student.class);
 			this.studentDao.save(student);
-			return new SuccessResult(Messages.studentAddMessage);
+			return this.getAllStudents();
 		}
 
-		return new ErrorResult(Messages.existStudentForAddOperation);
+		return new ErrorDataResult<>(Messages.existStudentForAddOperation);
 	}
 
 	@Override

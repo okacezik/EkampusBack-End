@@ -3,6 +3,8 @@ package myproject.ekampus.api;
 import java.util.List;
 
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,11 +39,13 @@ public class StudentsController {
 	private StudentService studentService;
 
 	@PostMapping("/add")
+	@CachePut(value = "students", key = "1")
 	public Result add(@RequestBody CreateStudentRequest createStudentRequest) {
 		return this.studentService.add(createStudentRequest);
 	}
 
 	@DeleteMapping("/delete")
+	@CacheEvict(value = "students", key = "1", condition = "#result.success != false")
 	public Result delete(@RequestBody DeleteStudentRequest deleteStudentRequest) {
 		return this.studentService.delete(deleteStudentRequest);
 	}
@@ -62,7 +66,7 @@ public class StudentsController {
 	}
 
 	@GetMapping("/getAllStudents")
-	@Cacheable(value = "students" ,unless = "#result == null")
+	@Cacheable(value = "students", unless = "#result == null", key = "1")
 	public DataResult<List<GetAllStudentsResponse>> getAllStudent() {
 		log.info("Getting students from DB");
 		return this.studentService.getAllStudents();

@@ -20,5 +20,7 @@ public interface PostService {
 	DataResult<List<GetAllPostsResponse>> findByStudentNumberPosts(String studentNumber);
 
 	DataResult<List<GetAllPostsResponse>> findByStudentIdPosts(int id);
+	
+	DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber);
 
 }
