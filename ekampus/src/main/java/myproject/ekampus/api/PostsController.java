@@ -56,7 +56,7 @@ public class PostsController {
 	}
 
 	@GetMapping("/getPostDetailsBySort")
-	@Cacheable(value = "posts", unless = "#result == null", key = "1")
+	@Cacheable(value = "posts", key = "1", unless = "#result == null")
 	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate() {
 		log.info("Getting posts from DB");
 		return this.postService.getPostWithStudentDetailsSortedByLoadDate();
@@ -66,9 +66,11 @@ public class PostsController {
 	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber) {
 		return this.postService.findByStudentNumberPosts(studentNumber);
 	}
-	
+
 	@GetMapping("/getAllMyFriendsPosts")
-	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber){
+	@Cacheable(value = "posts", key = "2", unless = "#result == null")
+	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber) {
+		log.info("Getting my friends posts from DB");
 		return this.postService.getAllMyFriendsPostsWithStudentDetails(studentNumber);
 	}
 }

@@ -106,13 +106,16 @@ public class PostManager implements PostService {
 		return new ErrorDataResult<>(Messages.notFindPost);
 	}
 
-	//may be requeired code refactoring
+	// may be requeired code refactoring
 	@Override
 	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber) {
 		DataResult<List<GetAllFriendshipByStudentNumber>> friendships = this.friendshipRequestService
 				.getAllFriendshipByStudentNumber(studentNumber);
 		List<GetAllFriendshipByStudentNumber> friends = friendships.getData();
-		List<Post> posts = this.postDao.findAll();
+
+		Sort sort = Sort.by(Direction.DESC, "loadDate");
+
+		List<Post> posts = this.postDao.findAll(sort);
 		List<Post> myFriendsPosts = new ArrayList<>();
 		for (Post post : posts) {
 			for (GetAllFriendshipByStudentNumber friend : friends) {

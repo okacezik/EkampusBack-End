@@ -49,4 +49,7 @@ public class Student {
 	@Column(name = "hidden_account")
 	private boolean hiddenAccount=false;
 	
+	@OneToMany(mappedBy = "likeStudent")
+	private List<Like> likes;
+	
 }

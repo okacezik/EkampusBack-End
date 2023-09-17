@@ -36,4 +36,5 @@ public interface StudentService {
 	Result hiddenAccountRequest(HiddenAccountRequest hiddenAccountRequest);
 	
 	DataResult<Boolean> isHiddenAccountByStudentNumber(String studentNumber);
+	
 }
