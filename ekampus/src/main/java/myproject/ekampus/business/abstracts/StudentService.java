@@ -8,6 +8,7 @@ import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
+import myproject.ekampus.business.dtos.responses.GetStudentByStudentNumber;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
@@ -19,7 +20,7 @@ public interface StudentService {
 
 	DataResult<GetByIdStudentResponse> getByIdStudent(int id);
 
-	DataResult<GetAllStudentsResponse> getByStudentNumberStudent(String studentNumber);
+	DataResult<GetStudentByStudentNumber> getByStudentNumberStudent(String studentNumber);
 
 	DataResult<GetAllStudentsResponse> findByStudentFirstName(String studentName);
 
@@ -36,5 +37,5 @@ public interface StudentService {
 	Result hiddenAccountRequest(HiddenAccountRequest hiddenAccountRequest);
 	
 	DataResult<Boolean> isHiddenAccountByStudentNumber(String studentNumber);
-	
+		
 }

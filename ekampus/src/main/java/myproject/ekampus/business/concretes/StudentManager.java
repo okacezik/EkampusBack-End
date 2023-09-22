@@ -16,6 +16,7 @@ import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
+import myproject.ekampus.business.dtos.responses.GetStudentByStudentNumber;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
@@ -149,13 +150,13 @@ public class StudentManager implements StudentService {
 	}
 
 	@Override
-	public DataResult<GetAllStudentsResponse> getByStudentNumberStudent(String studentNumber) {
+	public DataResult<GetStudentByStudentNumber> getByStudentNumberStudent(String studentNumber) {
 		Student student = this.studentDao.findByStudentNumber(studentNumber);
 		return student != null
-				? new SuccessDataResult<GetAllStudentsResponse>(
-						this.mapperService.forResponse().map(student, GetAllStudentsResponse.class),
+				? new SuccessDataResult<GetStudentByStudentNumber>(
+						this.mapperService.forResponse().map(student, GetStudentByStudentNumber.class),
 						Messages.studentListMessage)
-				: new ErrorDataResult<GetAllStudentsResponse>(Messages.notFindStudent);
+				: new ErrorDataResult<GetStudentByStudentNumber>(Messages.notFindStudent);
 	}
 
 	@Override

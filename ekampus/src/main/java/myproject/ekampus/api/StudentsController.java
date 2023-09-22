@@ -25,6 +25,7 @@ import myproject.ekampus.business.dtos.requests.HiddenAccountRequest;
 import myproject.ekampus.business.dtos.requests.LogInStudent;
 import myproject.ekampus.business.dtos.responses.GetAllStudentsResponse;
 import myproject.ekampus.business.dtos.responses.GetByIdStudentResponse;
+import myproject.ekampus.business.dtos.responses.GetStudentByStudentNumber;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
@@ -89,7 +90,7 @@ public class StudentsController {
 	}
 
 	@GetMapping("/getByStudentNumberStudent")
-	public DataResult<GetAllStudentsResponse> getByStudentNumberStudent(@RequestParam String studentNumber) {
+	public DataResult<GetStudentByStudentNumber> getByStudentNumberStudent(@RequestParam String studentNumber) {
 		return this.studentService.getByStudentNumberStudent(studentNumber);
 	}
 

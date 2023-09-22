@@ -17,7 +17,6 @@ public class GetAllPostsResponse {
 	private String postPhotoPath;
 	private String firstName;
 	private String lastName;
-	private String studentPhotoPath;
 	private LocalDateTime loadDate = LocalDateTime.now();	
 
 }
