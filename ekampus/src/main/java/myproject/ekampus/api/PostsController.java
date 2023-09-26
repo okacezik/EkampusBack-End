@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import myproject.ekampus.business.abstracts.PostService;
 import myproject.ekampus.business.dtos.requests.CreatePostRequest;
 import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
+import myproject.ekampus.business.dtos.responses.GetLikeByPostId;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
@@ -63,14 +64,20 @@ public class PostsController {
 	}
 
 	@GetMapping("/getPostsByStudentNumber")
-	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(String studentNumber) {
+	public DataResult<List<GetAllPostsResponse>> findByStudent_StudentNumber(@RequestParam String studentNumber) {
 		return this.postService.findByStudentNumberPosts(studentNumber);
 	}
 
 	@GetMapping("/getAllMyFriendsPosts")
 	@Cacheable(value = "posts", key = "2", unless = "#result == null")
-	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber) {
+	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(
+			@RequestParam String studentNumber) {
 		log.info("Getting my friends posts from DB");
 		return this.postService.getAllMyFriendsPostsWithStudentDetails(studentNumber);
+	}
+
+	@GetMapping("/likes")
+	public DataResult<List<GetLikeByPostId>> getLikes(@RequestParam int postId) {
+		return this.postService.getLikes(postId);
 	}
 }

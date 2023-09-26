@@ -27,4 +27,5 @@ public class LikesController {
 	public Result removeLike(RemovetLikeFromThePostRequest removeLike) {
 		return this.likeService.removeLikeFromThePost(removeLike);
 	}
+	
 }

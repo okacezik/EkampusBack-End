@@ -26,5 +26,10 @@ public class Messages {
 	static String requestsDeleted = "Request deleted";
 	static String requestAccepted = "Request accepted";
 	static String notRequestDeleted = "Not Request Deleted";
+	
+	//These messages are about like
+	static String likedStudentsListed = "Listed liked students";
+	static String likedThePost = "Liked the post";
+	static String notFoundLike = "Not found like for the post";
 
 }

@@ -15,6 +15,7 @@ import myproject.ekampus.business.abstracts.PostService;
 import myproject.ekampus.business.dtos.requests.CreatePostRequest;
 import myproject.ekampus.business.dtos.responses.GetAllFriendshipByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
+import myproject.ekampus.business.dtos.responses.GetLikeByPostId;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
@@ -23,6 +24,7 @@ import myproject.ekampus.core.utilites.results.Result;
 import myproject.ekampus.core.utilites.results.SuccessDataResult;
 import myproject.ekampus.core.utilites.results.SuccessResult;
 import myproject.ekampus.dataAccess.abstracts.PostDao;
+import myproject.ekampus.entities.concretes.Like;
 import myproject.ekampus.entities.concretes.Post;
 
 @Service
@@ -133,6 +135,19 @@ public class PostManager implements PostService {
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
+	}
+
+	@Override
+	public DataResult<List<GetLikeByPostId>> getLikes(int postId) {
+		Optional<Post> post = this.postDao.findById(postId);
+		if (post.isPresent()) {
+			List<Like> likes = post.get().getLikes();
+			List<GetLikeByPostId> response = likes.stream()
+					.map(like -> this.mapperService.forResponse().map(like, GetLikeByPostId.class))
+					.collect(Collectors.toList());
+			return new SuccessDataResult<List<GetLikeByPostId>>(response, Messages.likedStudentsListed);
+		}
+		return new SuccessDataResult<>(Messages.notFoundLike);
 	}
 
 }

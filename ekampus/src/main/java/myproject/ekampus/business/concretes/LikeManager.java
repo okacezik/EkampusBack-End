@@ -34,5 +34,4 @@ public class LikeManager implements LikeService {
 		this.likeDao.delete(like);
 		return new SuccessResult("Removed like");
 	}
-
 }

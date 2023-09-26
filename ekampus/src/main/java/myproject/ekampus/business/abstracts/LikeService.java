@@ -9,4 +9,5 @@ public interface LikeService {
 	Result likeThePost(LikeThePostRequest likeRequest);
 
 	Result removeLikeFromThePost(RemovetLikeFromThePostRequest removetLikeFromThePostRequest);
+	
 }
