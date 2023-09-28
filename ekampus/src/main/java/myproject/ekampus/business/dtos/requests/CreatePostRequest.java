@@ -21,9 +21,9 @@ public class CreatePostRequest {
     @NotBlank
     private String comment;
 
-    @NotNull
+    /*@NotNull
     @NotBlank
-    private String postPhotoPath;
+    private String postPhotoPath;*/
     private LocalDateTime loadDate = LocalDateTime.now();
     
 }

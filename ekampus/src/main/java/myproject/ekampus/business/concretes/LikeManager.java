@@ -1,5 +1,7 @@
 package myproject.ekampus.business.concretes;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,13 @@ public class LikeManager implements LikeService {
 
 	@Override
 	public Result likeThePost(LikeThePostRequest likeRequest) {
+		Optional<Like> foundLike = this.likeDao.findByPost_IdAndLikeStudent_Id(likeRequest.getPostId(),
+				likeRequest.getStudentId());
+
+		if (foundLike.isPresent()) {
+			return new SuccessResult("Already liked post");
+		}
+
 		Like like = this.mapperService.forRequest().map(likeRequest, Like.class);
 		this.likeDao.save(like);
 		return new SuccessResult("Post liked");
