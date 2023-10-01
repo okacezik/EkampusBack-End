@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class RemovetLikeFromThePostRequest {
+public class RemoveLikeFromThePostRequest {
 
 	@NotNull
 	@NotBlank
-	private int studentId;
+	private int likeStudentId;
 	
 	@NotNull
 	@NotBlank

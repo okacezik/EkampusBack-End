@@ -31,7 +31,4 @@ public class CreateStudentRequest {
     @NotBlank
     private String password;
 
-    @NotNull
-    @NotBlank
-    private String studentPhotoPath;
 }

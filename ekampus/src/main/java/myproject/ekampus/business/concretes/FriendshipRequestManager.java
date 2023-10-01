@@ -1,6 +1,7 @@
 package myproject.ekampus.business.concretes;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -68,28 +69,32 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 	@Override
 	public Result deleteFriendshipResultBySender(DeleteFriendshipRequest deleteFriendshipRequest) {
 
-		FriendshipRequest request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
+		Optional<FriendshipRequest> request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
 				deleteFriendshipRequest.getReceiverStudentNumber(), deleteFriendshipRequest.getSenderStudentNumber());
 
-		this.friendshipRequestDao.delete(request);
+		this.friendshipRequestDao.delete(request.get());
 		return new SuccessResult(Messages.requestsDeleted);
 	}
 
 	@Override
 	public Result acceptFriendshipRequest(AcceptFriendshipRequest acceptFriendshipRequest) {
-		FriendshipRequest request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
+		Optional<FriendshipRequest> request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
 				acceptFriendshipRequest.getReceiverStudentNumber(), acceptFriendshipRequest.getSenderStudentNumber());
-		request.setAccept(true);
-		this.friendshipRequestDao.save(request);
+		request.get().setAccept(true);
+		this.friendshipRequestDao.save(request.get());
 		return new SuccessResult(Messages.requestAccepted);
 	}
 
 	@Override
 	public Result rejectFriendshipRequest(RejectFriendshipRequest rejectFriendshipRequest) {
-		FriendshipRequest request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
+		Optional<FriendshipRequest> request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
 				rejectFriendshipRequest.getReceiverStudentNumber(), rejectFriendshipRequest.getSenderStudentNumber());
-		this.friendshipRequestDao.delete(request);
-		return new SuccessResult(Messages.requestsDeleted);
+		if(request.isPresent()) {
+			this.friendshipRequestDao.delete(request.get());
+			return new SuccessResult(Messages.requestsDeleted);
+		}
+
+		return new ErrorResult("Not found friendship");
 	}
 
 	@Override
@@ -143,25 +148,25 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 	}
 
 	@Override
-	public DataResult<Boolean> areWeFriends(String studentNumber, String otherStudentNumber) {
+	public DataResult<Integer> areWeFriends(String studentNumber, String otherStudentNumber) {
 		FriendshipRequest friendshipRequest = this.friendshipRequestDao.findById(otherStudentNumber+studentNumber);
 		if(friendshipRequest != null) {
 			if (friendshipRequest.isAccept()) {
-				return new SuccessDataResult<Boolean>(true, "We are friends");
+				return new SuccessDataResult<Integer>(1, "We are friends");
 			}else {
-				return new SuccessDataResult<Boolean>(false, "We are not friends");
+				return new SuccessDataResult<Integer>(2, "We are not friends, he/she sended request me");
 			}
 		}
 		friendshipRequest = this.friendshipRequestDao.findById(studentNumber+otherStudentNumber);
 		if(friendshipRequest != null) {
 			if (friendshipRequest.isAccept()) {
-				return new SuccessDataResult<Boolean>(true, "We are friends");
+				return new SuccessDataResult<Integer>(1, "We are friends");
 			}else {
-				return new SuccessDataResult<Boolean>(false, "We are not friends");
+				return new SuccessDataResult<Integer>(3, "We are not friends, I sended request");
 			}
 		}
 		
-		return new SuccessDataResult<Boolean>(false, "We are not friends");
+		return new SuccessDataResult<Integer>(4, "We are not friends, be friends");
 	}
 
 

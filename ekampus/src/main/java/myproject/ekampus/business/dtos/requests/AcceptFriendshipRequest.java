@@ -18,6 +18,4 @@ public class AcceptFriendshipRequest {
 	@NotNull
 	@NotBlank
 	private String receiverStudentNumber;
-	
-	private boolean isAccept = true;
 }

@@ -41,8 +41,8 @@ public class Student {
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "student_photo")
-	private String studentPhotoPath;
+	//@Column(name = "student_photo")
+	//private String studentPhotoPath;
 
 	@OneToMany(mappedBy = "student")
 	private List<Post> posts;

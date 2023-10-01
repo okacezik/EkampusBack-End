@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import myproject.ekampus.business.abstracts.LikeService;
 import myproject.ekampus.business.dtos.requests.LikeThePostRequest;
-import myproject.ekampus.business.dtos.requests.RemovetLikeFromThePostRequest;
+import myproject.ekampus.business.dtos.requests.RemoveLikeFromThePostRequest;
 import myproject.ekampus.core.utilites.results.Result;
 
 @AllArgsConstructor
@@ -24,14 +24,15 @@ public class LikesController {
 	private LikeService likeService;
 	
 	@PostMapping("/")
-	public Result likeThePost(@RequestBody LikeThePostRequest like) {
+	public Result likeThePost(@RequestBody() LikeThePostRequest like) {
 		log.info("request like");
 		return this.likeService.likeThePost(like);
 	}
 	
 	@DeleteMapping("/")
-	public Result removeLike(@RequestBody RemovetLikeFromThePostRequest removeLike) {
+	public Result removeLike(@RequestBody() RemoveLikeFromThePostRequest removeLike) {
 		log.info("request remove like");
+		log.info(removeLike.getPostId()+" POST "+removeLike.getLikeStudentId()+" STUDENT");
 		return this.likeService.removeLikeFromThePost(removeLike);
 	}
 	

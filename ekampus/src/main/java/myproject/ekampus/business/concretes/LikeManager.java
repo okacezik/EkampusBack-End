@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.LikeService;
 import myproject.ekampus.business.dtos.requests.LikeThePostRequest;
-import myproject.ekampus.business.dtos.requests.RemovetLikeFromThePostRequest;
+import myproject.ekampus.business.dtos.requests.RemoveLikeFromThePostRequest;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
+import myproject.ekampus.core.utilites.results.ErrorDataResult;
 import myproject.ekampus.core.utilites.results.Result;
 import myproject.ekampus.core.utilites.results.SuccessResult;
 import myproject.ekampus.dataAccess.abstracts.LikeDao;
@@ -26,7 +27,7 @@ public class LikeManager implements LikeService {
 	@Override
 	public Result likeThePost(LikeThePostRequest likeRequest) {
 		Optional<Like> foundLike = this.likeDao.findByPost_IdAndLikeStudent_Id(likeRequest.getPostId(),
-				likeRequest.getStudentId());
+				likeRequest.getLikeStudentId());
 
 		if (foundLike.isPresent()) {
 			return new SuccessResult("Already liked post");
@@ -38,9 +39,14 @@ public class LikeManager implements LikeService {
 	}
 
 	@Override
-	public Result removeLikeFromThePost(RemovetLikeFromThePostRequest removetLikeFromThePostRequest) {
-		Like like = this.mapperService.forRequest().map(removetLikeFromThePostRequest, Like.class);
-		this.likeDao.delete(like);
-		return new SuccessResult("Removed like");
+	public Result removeLikeFromThePost(RemoveLikeFromThePostRequest removeLikeFromThePostRequest) {
+		Optional<Like> foundLike = this.likeDao.findByPost_IdAndLikeStudent_Id(removeLikeFromThePostRequest.getPostId(),
+				removeLikeFromThePostRequest.getLikeStudentId());
+		if(foundLike.isPresent()) {
+			this.likeDao.delete(foundLike.get());
+			return new SuccessResult("Removed like");
+		}
+		return new ErrorDataResult<>("Not found like");
+
 	}
 }

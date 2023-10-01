@@ -13,7 +13,7 @@ public class LikeThePostRequest {
 
 	@NotNull
 	@NotBlank
-	private int studentId;
+	private int likeStudentId;
 	
 	@NotNull
 	@NotBlank

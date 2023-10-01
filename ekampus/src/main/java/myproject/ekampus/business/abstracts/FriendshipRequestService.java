@@ -30,6 +30,6 @@ public interface FriendshipRequestService {
 
 	DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber);
 	
-	DataResult<Boolean> areWeFriends(String studentNumber, String otherStudentNumber);
+	DataResult<Integer> areWeFriends(String studentNumber, String otherStudentNumber);
 
 }
