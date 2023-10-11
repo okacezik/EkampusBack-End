@@ -40,20 +40,11 @@ public class PostsController {
 		return this.postService.add(createPostRequest);
 	}
 
-	@DeleteMapping("/delete")
+	@DeleteMapping("/")
 	@CacheEvict(value = "posts", key = "1", condition = "#result.success != false")
 	public Result delete(@RequestParam int id) {
+		log.info("delete request id : "+id);
 		return this.postService.delete(id);
-	}
-
-	@GetMapping("/getPostWithStudentDetails")
-	public DataResult<List<GetAllPostsResponse>> getPostWithStudentDetails() {
-		return this.postService.getAllPostsWithStudentDetails();
-	}
-
-	@GetMapping("/getPostsByStudentId")
-	public DataResult<List<GetAllPostsResponse>> getPostsByStudentId(@RequestParam int studentId) {
-		return this.postService.findByStudentIdPosts(studentId);
 	}
 
 	@GetMapping("/getPostDetailsBySort")
@@ -69,12 +60,12 @@ public class PostsController {
 	}
 
 	@GetMapping("/getAllMyFriendsPosts")
-	@Cacheable(value = "posts", key = "2", unless = "#result == null")
 	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(
 			@RequestParam String studentNumber) {
-		log.info("Getting my friends posts from DB");
+		log.info("Getting friends posts from DB",studentNumber);
 		return this.postService.getAllMyFriendsPostsWithStudentDetails(studentNumber);
 	}
+	
 
 	@GetMapping("/likes")
 	public DataResult<List<GetLikeByPostId>> getLikes(@RequestParam int postId) {

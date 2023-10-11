@@ -1,5 +1,6 @@
 package myproject.ekampus.business.concretes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,13 +9,14 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.FriendshipRequestService;
+import myproject.ekampus.business.abstracts.StudentService;
 import myproject.ekampus.business.dtos.requests.AcceptFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.CreateSendFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.DeleteFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.RejectFriendshipRequest;
-import myproject.ekampus.business.dtos.responses.GetAllFriendshipByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllFriendshipRequestByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllMySendRequestByStudentNumber;
+import myproject.ekampus.business.dtos.responses.GetStudentByStudentNumber;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorResult;
@@ -30,6 +32,7 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 
 	private FriendshipRequestDao friendshipRequestDao;
 	private ModelMapperService modelMapperService;
+	private StudentService studentService;
 
 	@Override
 	public Result sendFriendshipRequest(CreateSendFriendshipRequest createSendFriendshipRequest) {
@@ -69,8 +72,9 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 	@Override
 	public Result deleteFriendshipResultBySender(DeleteFriendshipRequest deleteFriendshipRequest) {
 
-		Optional<FriendshipRequest> request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
-				deleteFriendshipRequest.getReceiverStudentNumber(), deleteFriendshipRequest.getSenderStudentNumber());
+		Optional<FriendshipRequest> request = this.friendshipRequestDao
+				.findByReceiverStudentNumberAndSenderStudentNumber(deleteFriendshipRequest.getReceiverStudentNumber(),
+						deleteFriendshipRequest.getSenderStudentNumber());
 
 		this.friendshipRequestDao.delete(request.get());
 		return new SuccessResult(Messages.requestsDeleted);
@@ -78,8 +82,9 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 
 	@Override
 	public Result acceptFriendshipRequest(AcceptFriendshipRequest acceptFriendshipRequest) {
-		Optional<FriendshipRequest> request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
-				acceptFriendshipRequest.getReceiverStudentNumber(), acceptFriendshipRequest.getSenderStudentNumber());
+		Optional<FriendshipRequest> request = this.friendshipRequestDao
+				.findByReceiverStudentNumberAndSenderStudentNumber(acceptFriendshipRequest.getReceiverStudentNumber(),
+						acceptFriendshipRequest.getSenderStudentNumber());
 		request.get().setAccept(true);
 		this.friendshipRequestDao.save(request.get());
 		return new SuccessResult(Messages.requestAccepted);
@@ -87,9 +92,10 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 
 	@Override
 	public Result rejectFriendshipRequest(RejectFriendshipRequest rejectFriendshipRequest) {
-		Optional<FriendshipRequest> request = this.friendshipRequestDao.findByReceiverStudentNumberAndSenderStudentNumber(
-				rejectFriendshipRequest.getReceiverStudentNumber(), rejectFriendshipRequest.getSenderStudentNumber());
-		if(request.isPresent()) {
+		Optional<FriendshipRequest> request = this.friendshipRequestDao
+				.findByReceiverStudentNumberAndSenderStudentNumber(rejectFriendshipRequest.getReceiverStudentNumber(),
+						rejectFriendshipRequest.getSenderStudentNumber());
+		if (request.isPresent()) {
 			this.friendshipRequestDao.delete(request.get());
 			return new SuccessResult(Messages.requestsDeleted);
 		}
@@ -98,18 +104,27 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 	}
 
 	@Override
-	public DataResult<List<GetAllFriendshipByStudentNumber>> getAllFriendshipByStudentNumber(String studentNumber) {
+	public DataResult<List<GetStudentByStudentNumber>> getAllFriendshipByStudentNumber(String studentNumber) {
 		List<FriendshipRequest> friendships = this.friendshipRequestDao.findByIdContains(studentNumber);
 
 		List<FriendshipRequest> filteredFriendships = friendships.stream().filter(friendship -> friendship.isAccept())
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<GetAllFriendshipByStudentNumber>>(
-				filteredFriendships.stream()
-						.map(friendship -> this.modelMapperService.forResponse().map(friendship,
-								GetAllFriendshipByStudentNumber.class))
-						.collect(Collectors.toList()),
-				Messages.requestsListed);
+		List<GetStudentByStudentNumber> students = new ArrayList<>();
+		for (FriendshipRequest friend : filteredFriendships) {
+			if (!friend.getReceiverStudentNumber().equals(studentNumber)) {
+				DataResult<GetStudentByStudentNumber> student = this.studentService
+						.getByStudentNumberStudent(friend.getReceiverStudentNumber());
+				students.add(student.getData());
+			}else {
+				DataResult<GetStudentByStudentNumber> student = this.studentService
+						.getByStudentNumberStudent(friend.getSenderStudentNumber());
+				students.add(student.getData());
+			}
+			
+		}
+
+		return new SuccessDataResult<List<GetStudentByStudentNumber>>(students, Messages.studentsListMessage);
 
 	}
 
@@ -138,36 +153,33 @@ public class FriendshipRequestManager implements FriendshipRequestService {
 	public DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber) {
 		List<FriendshipRequest> requests = this.friendshipRequestDao.findBySenderStudentNumber(studentNumber);
 		requests = requests.stream().filter(request -> !request.isAccept()).collect(Collectors.toList());
-		List<GetAllMySendRequestByStudentNumber> mySendRequests = requests.stream()
-				.map(request -> this.modelMapperService.forResponse().map(request,
-						GetAllMySendRequestByStudentNumber.class))
+		List<GetAllMySendRequestByStudentNumber> mySendRequests = requests.stream().map(
+				request -> this.modelMapperService.forResponse().map(request, GetAllMySendRequestByStudentNumber.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<GetAllMySendRequestByStudentNumber>>(mySendRequests,
-				Messages.requestsListed);
+		return new SuccessDataResult<List<GetAllMySendRequestByStudentNumber>>(mySendRequests, Messages.requestsListed);
 	}
 
 	@Override
 	public DataResult<Integer> areWeFriends(String studentNumber, String otherStudentNumber) {
-		FriendshipRequest friendshipRequest = this.friendshipRequestDao.findById(otherStudentNumber+studentNumber);
-		if(friendshipRequest != null) {
+		FriendshipRequest friendshipRequest = this.friendshipRequestDao.findById(otherStudentNumber + studentNumber);
+		if (friendshipRequest != null) {
 			if (friendshipRequest.isAccept()) {
 				return new SuccessDataResult<Integer>(1, "We are friends");
-			}else {
+			} else {
 				return new SuccessDataResult<Integer>(2, "We are not friends, he/she sended request me");
 			}
 		}
-		friendshipRequest = this.friendshipRequestDao.findById(studentNumber+otherStudentNumber);
-		if(friendshipRequest != null) {
+		friendshipRequest = this.friendshipRequestDao.findById(studentNumber + otherStudentNumber);
+		if (friendshipRequest != null) {
 			if (friendshipRequest.isAccept()) {
 				return new SuccessDataResult<Integer>(1, "We are friends");
-			}else {
+			} else {
 				return new SuccessDataResult<Integer>(3, "We are not friends, I sended request");
 			}
 		}
-		
+
 		return new SuccessDataResult<Integer>(4, "We are not friends, be friends");
 	}
-
 
 }

@@ -13,9 +13,9 @@ import lombok.AllArgsConstructor;
 import myproject.ekampus.business.abstracts.FriendshipRequestService;
 import myproject.ekampus.business.abstracts.PostService;
 import myproject.ekampus.business.dtos.requests.CreatePostRequest;
-import myproject.ekampus.business.dtos.responses.GetAllFriendshipByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllPostsResponse;
 import myproject.ekampus.business.dtos.responses.GetLikeByPostId;
+import myproject.ekampus.business.dtos.responses.GetStudentByStudentNumber;
 import myproject.ekampus.core.utilites.mappers.ModelMapperService;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
@@ -60,17 +60,6 @@ public class PostManager implements PostService {
 
 		Sort sort = Sort.by(Direction.DESC, "loadDate");
 		List<Post> posts = this.postDao.findAll(sort);
-		List<GetAllPostsResponse> response = posts.stream()
-				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
-				.collect(Collectors.toList());
-
-		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
-	}
-
-	// discovery
-	@Override
-	public DataResult<List<GetAllPostsResponse>> getAllPostsWithStudentDetails() {
-		List<Post> posts = this.postDao.findAll();
 		List<Post> filteredPosts = posts.stream().filter(post -> !post.getStudent().isHiddenAccount())
 				.collect(Collectors.toList());
 		List<GetAllPostsResponse> response = filteredPosts.stream()
@@ -82,6 +71,7 @@ public class PostManager implements PostService {
 
 	@Override
 	public DataResult<List<GetAllPostsResponse>> findByStudentNumberPosts(String studentNumber) {
+
 		List<Post> posts = this.postDao.findByStudent_StudentNumber(studentNumber);
 
 		if (posts.size() > 0) {
@@ -96,45 +86,42 @@ public class PostManager implements PostService {
 
 	}
 
-	@Override
-	public DataResult<List<GetAllPostsResponse>> findByStudentIdPosts(int id) {
-		List<Post> posts = this.postDao.findByStudent_Id(id);
-		if (posts.size() > 0) {
-			return new SuccessDataResult<List<GetAllPostsResponse>>(
-					posts.stream().map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
-							.collect(Collectors.toList()),
-					Messages.postsListMessage);
-		}
-		return new ErrorDataResult<>(Messages.notFindPost);
-	}
-
 	// may be requeired code refactoring
 	@Override
 	public DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber) {
-		DataResult<List<GetAllFriendshipByStudentNumber>> friendships = this.friendshipRequestService
+
+		DataResult<List<GetStudentByStudentNumber>> friendships = this.friendshipRequestService
 				.getAllFriendshipByStudentNumber(studentNumber);
-		List<GetAllFriendshipByStudentNumber> friends = friendships.getData();
+		
+		if(!friendships.getData().isEmpty()) {
+			List<GetStudentByStudentNumber> friends = friendships.getData();
 
-		Sort sort = Sort.by(Direction.DESC, "loadDate");
+			Sort sort = Sort.by(Direction.DESC, "loadDate");
 
-		List<Post> posts = this.postDao.findAll(sort);
-		List<Post> myFriendsPosts = new ArrayList<>();
-		for (Post post : posts) {
-			for (GetAllFriendshipByStudentNumber friend : friends) {
-				if ((post.getStudent().getStudentNumber().equals(friend.getReceiverStudentNumber())
-						|| post.getStudent().getStudentNumber().equals(friend.getSenderStudentNumber()))
-						&& !post.getStudent().getStudentNumber().equals(studentNumber)) {
-					myFriendsPosts.add(post);
-					break;
+			List<Post> posts = this.postDao.findAll(sort);
+			List<Post> myFriendsPosts = new ArrayList<>();
+			
+			for (Post post : posts) {
+				for (GetStudentByStudentNumber friend : friends) {
+					if (post.getStudent().getStudentNumber().equals(friend.getStudentNumber())) {
+						myFriendsPosts.add(post);
+						break;
+					}
 				}
 			}
+
+			List<GetAllPostsResponse> response = myFriendsPosts.stream()
+					.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
+					.collect(Collectors.toList());
+
+			return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
+
 		}
-
-		List<GetAllPostsResponse> response = myFriendsPosts.stream()
-				.map(post -> this.mapperService.forResponse().map(post, GetAllPostsResponse.class))
-				.collect(Collectors.toList());
-
-		return new SuccessDataResult<List<GetAllPostsResponse>>(response, Messages.postsListMessage);
+	
+	
+		
+			return new SuccessDataResult<>("There is not friends");
+		
 	}
 
 	@Override

@@ -6,9 +6,9 @@ import myproject.ekampus.business.dtos.requests.AcceptFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.CreateSendFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.DeleteFriendshipRequest;
 import myproject.ekampus.business.dtos.requests.RejectFriendshipRequest;
-import myproject.ekampus.business.dtos.responses.GetAllFriendshipByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllFriendshipRequestByStudentNumber;
 import myproject.ekampus.business.dtos.responses.GetAllMySendRequestByStudentNumber;
+import myproject.ekampus.business.dtos.responses.GetStudentByStudentNumber;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
@@ -26,7 +26,7 @@ public interface FriendshipRequestService {
 
 	DataResult<List<GetAllFriendshipRequestByStudentNumber>> getAllRequestsByStudentNumber(String studentNumber);
 
-	DataResult<List<GetAllFriendshipByStudentNumber>> getAllFriendshipByStudentNumber(String studentNumber);
+	DataResult<List<GetStudentByStudentNumber>> getAllFriendshipByStudentNumber(String studentNumber);
 
 	DataResult<List<GetAllMySendRequestByStudentNumber>> getAllMySendFriendship(String studentNumber);
 	

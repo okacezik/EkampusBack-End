@@ -14,14 +14,10 @@ public interface PostService {
 
 	Result delete(int postId);
 
-	DataResult<List<GetAllPostsResponse>> getAllPostsWithStudentDetails();
-
 	DataResult<List<GetAllPostsResponse>> getPostWithStudentDetailsSortedByLoadDate();
 
 	DataResult<List<GetAllPostsResponse>> findByStudentNumberPosts(String studentNumber);
 
-	DataResult<List<GetAllPostsResponse>> findByStudentIdPosts(int id);
-	
 	DataResult<List<GetAllPostsResponse>> getAllMyFriendsPostsWithStudentDetails(String studentNumber);
 	
 	DataResult<List<GetLikeByPostId>> getLikes(int postId);
