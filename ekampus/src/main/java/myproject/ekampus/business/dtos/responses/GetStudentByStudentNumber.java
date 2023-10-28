@@ -14,4 +14,5 @@ public class GetStudentByStudentNumber {
 	private String departmantName;
 	private String firstName;
 	private String lastName;
+	private boolean hiddenAccount;
 }

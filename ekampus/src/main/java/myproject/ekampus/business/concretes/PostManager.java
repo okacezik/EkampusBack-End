@@ -72,7 +72,9 @@ public class PostManager implements PostService {
 	@Override
 	public DataResult<List<GetAllPostsResponse>> findByStudentNumberPosts(String studentNumber) {
 
-		List<Post> posts = this.postDao.findByStudent_StudentNumber(studentNumber);
+		Sort sort = Sort.by(Direction.DESC, "loadDate");
+
+		List<Post> posts = this.postDao.findByStudent_StudentNumber(studentNumber,sort);
 
 		if (posts.size() > 0) {
 			List<GetAllPostsResponse> response = posts.stream()
@@ -85,6 +87,7 @@ public class PostManager implements PostService {
 		}
 
 	}
+	
 
 	// may be requeired code refactoring
 	@Override

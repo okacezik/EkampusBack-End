@@ -67,21 +67,16 @@ public class StudentsController {
 		return this.studentService.findByFirstNameStartsWith(studentName);
 	}
 
-	@GetMapping("/getAllStudents")
-	@Cacheable(value = "students", unless = "#result == null", key = "1")
-	public DataResult<List<GetAllStudentsResponse>> getAllStudent() {
-		log.info("Getting students from DB");
-		return this.studentService.getAllStudents();
-	}
-
 	@GetMapping("/getByIdStudent")
 	public DataResult<GetByIdStudentResponse> getByStudentId(@RequestParam int id) {
 		return this.studentService.getByIdStudent(id);
 	}
 
 	@GetMapping("/getAllStudentBySorted")
-	public DataResult<List<GetAllStudentsResponse>> getAllStudentBySorted() {
-		return this.studentService.getAllStudentBySorted();
+	@Cacheable(value = "students", unless = "#result == null", key = "1")
+	public DataResult<List<GetAllStudentsResponse>> getAllStudentsBySorted() {
+		log.info("Getting users from db");
+		return this.studentService.getAllStudentsBySorted();
 	}
 
 	@PostMapping("/entry")

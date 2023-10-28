@@ -1,5 +1,6 @@
 package myproject.ekampus.entities.concretes;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -19,7 +20,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "students")
-public class Student {
+public class Student implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

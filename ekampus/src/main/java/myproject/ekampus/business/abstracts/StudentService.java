@@ -28,9 +28,7 @@ public interface StudentService {
 
 	DataResult<List<GetAllStudentsResponse>> findByFirstNameStartsWith(String studentName);
 
-	DataResult<List<GetAllStudentsResponse>> getAllStudents();
-
-	DataResult<List<GetAllStudentsResponse>> getAllStudentBySorted();
+	DataResult<List<GetAllStudentsResponse>> getAllStudentsBySorted();
 
 	DataResult<GetByIdStudentResponse> findByStudentNumberAndPassword(LogInStudent login);
 

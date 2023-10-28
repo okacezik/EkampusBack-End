@@ -41,7 +41,7 @@ public class StudentManager implements StudentService {
 		if (student == null) {
 			student = this.mapperService.forRequest().map(createStudentRequest, Student.class);
 			this.studentDao.save(student);
-			return this.getAllStudents();
+			return this.getAllStudentsBySorted();
 		}
 
 		return new ErrorDataResult<>(Messages.existStudentForAddOperation);
@@ -105,7 +105,7 @@ public class StudentManager implements StudentService {
 	}
 
 	@Override
-	public DataResult<List<GetAllStudentsResponse>> getAllStudentBySorted() {
+	public DataResult<List<GetAllStudentsResponse>> getAllStudentsBySorted() {
 
 		Sort sort = Sort.by(Direction.ASC, "firstName");
 
@@ -113,16 +113,6 @@ public class StudentManager implements StudentService {
 		List<GetAllStudentsResponse> response = students.stream()
 				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
-	}
-
-	@Override
-	public DataResult<List<GetAllStudentsResponse>> getAllStudents() {
-		List<Student> students = this.studentDao.findAll();
-		List<GetAllStudentsResponse> response = students.stream()
-				.map(student -> this.mapperService.forResponse().map(student, GetAllStudentsResponse.class))
-				.collect(Collectors.toList());
-
 		return new SuccessDataResult<List<GetAllStudentsResponse>>(response, Messages.studentsListMessage);
 	}
 
