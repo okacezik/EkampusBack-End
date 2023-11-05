@@ -26,6 +26,10 @@ public class CreateStudentRequest {
     @NotNull
     @NotBlank
     private String departmantName;
+    
+    @NotNull
+    @NotBlank
+    private String username;
 
     @NotNull
     @NotBlank

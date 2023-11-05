@@ -86,6 +86,7 @@ public class StudentsController {
 
 	@GetMapping("/getByStudentNumberStudent")
 	public DataResult<GetStudentByStudentNumber> getByStudentNumberStudent(@RequestParam String studentNumber) {
+		log.info("Getting student's info");
 		return this.studentService.getByStudentNumberStudent(studentNumber);
 	}
 

@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UploadStudentImageRequest {
-
-	@NotNull
-	@NotBlank
-	private int studentId;
+public class AuthenticateRequest {
 	
 	@NotNull
 	@NotBlank
-	private byte[] studentPhoto;
+	private String username;
+	
+	@NotNull
+	@NotBlank
+	private String password;
 }

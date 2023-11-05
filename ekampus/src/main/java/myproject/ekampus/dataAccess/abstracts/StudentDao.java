@@ -1,6 +1,8 @@
 package myproject.ekampus.dataAccess.abstracts;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import myproject.ekampus.entities.concretes.Student;
@@ -22,5 +24,7 @@ public interface StudentDao extends JpaRepository<Student, Integer> {
 	Student findByStudentNumberAndPassword(String studentNumber, String password);
 	
 	Student findByStudentNumber(String studentNumber);
+	
+	Optional<Student> findByUsername(String username);
 
 }
