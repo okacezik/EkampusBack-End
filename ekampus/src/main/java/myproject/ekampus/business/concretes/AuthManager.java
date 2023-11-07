@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import myproject.ekampus.business.abstracts.AuthService;
 import myproject.ekampus.business.dtos.requests.AuthenticateRequest;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
-import myproject.ekampus.business.dtos.responses.AuthResponse;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
 import myproject.ekampus.core.utilites.results.SuccessDataResult;
@@ -28,7 +27,7 @@ public class AuthManager implements AuthService{
 
 
 	@Override
-	public DataResult<AuthResponse> register(CreateStudentRequest createStudentRequest) {
+	public DataResult<String> register(CreateStudentRequest createStudentRequest) {
 		Student control = this.studentDao.findByStudentNumber(createStudentRequest.getStudentNumber());
 		if(control == null) {
 			
@@ -45,13 +44,7 @@ public class AuthManager implements AuthService{
 			
 			String token = jwtService.generateToken(student);
 			
-			
-			
-			return new SuccessDataResult<AuthResponse>(AuthResponse
-					.builder()
-					.message("User successfully registered")
-					.token(token)
-					.build());
+			return new SuccessDataResult<String>(token, "User registered succesfully");
 			
 		}else {
 			return new ErrorDataResult<>("User already current");
@@ -60,7 +53,7 @@ public class AuthManager implements AuthService{
 	}
 
 	@Override
-	public DataResult<AuthResponse> login(AuthenticateRequest request) {
+	public DataResult<String> login(AuthenticateRequest request) {
 		 try {
 	            authenticationManager.authenticate(
 	                    new UsernamePasswordAuthenticationToken(
@@ -70,17 +63,12 @@ public class AuthManager implements AuthService{
 	            );
 
 	            var user = studentDao.findByUsername(request.getUsername()).orElseThrow();
-	            var jwtToken = jwtService.generateToken(user);
+	            var token = jwtService.generateToken(user);
 	            
-	            return new SuccessDataResult<AuthResponse>
-	            	(AuthResponse
-	            		.builder()
-	            		.message("user login successfully")
-	            		.token(jwtToken)
-	            		.build());
+	            return new SuccessDataResult<String>(token, "User login successfully");
 
 	        } catch (Exception e) {
-	            e.printStackTrace();
+	            //e.printStackTrace();
 	    		return new ErrorDataResult<>();
 	        }
 	}

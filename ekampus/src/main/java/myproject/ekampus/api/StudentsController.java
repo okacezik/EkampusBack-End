@@ -75,6 +75,7 @@ public class StudentsController {
 	@GetMapping("/getAllStudentBySorted")
 	@Cacheable(value = "students", unless = "#result == null", key = "1")
 	public DataResult<List<GetAllStudentsResponse>> getAllStudentsBySorted() {
+		log.info("USERS REQUE");
 		log.info("Getting users from db");
 		return this.studentService.getAllStudentsBySorted();
 	}
