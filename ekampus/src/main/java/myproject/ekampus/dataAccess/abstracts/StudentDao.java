@@ -26,5 +26,4 @@ public interface StudentDao extends JpaRepository<Student, Integer> {
 	Student findByStudentNumber(String studentNumber);
 	
 	Optional<Student> findByUsername(String username);
-
 }

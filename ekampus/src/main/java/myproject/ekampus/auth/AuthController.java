@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import myproject.ekampus.business.abstracts.AuthService;
 import myproject.ekampus.business.dtos.requests.AuthenticateRequest;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.responses.AuthenticatedUser;
 import myproject.ekampus.core.utilites.results.DataResult;
 
 @CrossOrigin
@@ -26,7 +27,7 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public DataResult<String> login(@RequestBody AuthenticateRequest request) {
+	public DataResult<AuthenticatedUser> login(@RequestBody AuthenticateRequest request) {
 		return authService.login(request);
 	}
 	

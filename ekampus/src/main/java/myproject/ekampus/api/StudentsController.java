@@ -30,11 +30,11 @@ import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
 @Slf4j
-@CrossOrigin
 @AllArgsConstructor
+@CrossOrigin
 @CacheConfig(cacheNames = "students")
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/api/v1/students")
 public class StudentsController {
 
 	private StudentService studentService;
@@ -99,5 +99,10 @@ public class StudentsController {
 	@GetMapping("/isHiddenAccount")
 	public DataResult<Boolean> isHiddenAccountByStudentNumber(@RequestParam String studentNumber) {
 		return this.studentService.isHiddenAccountByStudentNumber(studentNumber);
+	}
+	
+	@GetMapping("/check-token")
+	public String checkJwt(){
+		return "Validated";
 	}
 }

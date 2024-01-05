@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import myproject.ekampus.business.abstracts.AuthService;
 import myproject.ekampus.business.dtos.requests.AuthenticateRequest;
 import myproject.ekampus.business.dtos.requests.CreateStudentRequest;
+import myproject.ekampus.business.dtos.responses.AuthenticatedUser;
 import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.ErrorDataResult;
 import myproject.ekampus.core.utilites.results.SuccessDataResult;
@@ -53,7 +54,7 @@ public class AuthManager implements AuthService{
 	}
 
 	@Override
-	public DataResult<String> login(AuthenticateRequest request) {
+	public DataResult<AuthenticatedUser> login(AuthenticateRequest request) {
 		 try {
 	            authenticationManager.authenticate(
 	                    new UsernamePasswordAuthenticationToken(
@@ -65,7 +66,17 @@ public class AuthManager implements AuthService{
 	            var user = studentDao.findByUsername(request.getUsername()).orElseThrow();
 	            var token = jwtService.generateToken(user);
 	            
-	            return new SuccessDataResult<String>(token, "User login successfully");
+	            return new SuccessDataResult<AuthenticatedUser>(AuthenticatedUser
+	            		.builder()
+	            		.id(user.getId())
+	            		.firstName(user.getFirstName())
+	            		.lastName(user.getLastName())
+	            		.studentNumber(user.getStudentNumber())
+	            		.departmantName(user.getDepartmantName())
+	            		.hiddenAccount(user.isHiddenAccount())
+	            		.token(token)
+	            		.build()
+	            		,"User login successfully");
 
 	        } catch (Exception e) {
 	            //e.printStackTrace();

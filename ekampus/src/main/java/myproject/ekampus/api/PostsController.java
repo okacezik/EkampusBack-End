@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import myproject.ekampus.business.abstracts.PostService;
@@ -29,7 +30,8 @@ import myproject.ekampus.core.utilites.results.Result;
 @CrossOrigin
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api/v1/posts")
+@SecurityRequirement(name = "bearerAuth")
 public class PostsController {
 
 	private PostService postService;

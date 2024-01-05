@@ -18,7 +18,7 @@ import myproject.ekampus.business.abstracts.StudentImageService;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/student_images")
+@RequestMapping("/api/v1/student_images")
 @CrossOrigin
 @CacheConfig(cacheNames = "students_images")
 public class StudentImagesController {

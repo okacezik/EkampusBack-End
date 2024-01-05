@@ -26,7 +26,7 @@ import myproject.ekampus.core.utilites.results.DataResult;
 import myproject.ekampus.core.utilites.results.Result;
 
 @RestController
-@RequestMapping("/api/friendship")
+@RequestMapping("/api/v1/friendship")
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
 public class FriendshipRequestController {

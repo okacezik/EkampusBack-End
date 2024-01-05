@@ -22,7 +22,7 @@ import myproject.ekampus.core.utilites.results.Result;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/like")
+@RequestMapping("/api/v1/like")
 @CrossOrigin
 @Slf4j
 public class LikesController {
