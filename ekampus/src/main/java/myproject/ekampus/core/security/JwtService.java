@@ -1,4 +1,4 @@
-package myproject.ekampus.security;
+package myproject.ekampus.core.security;
 
 import java.security.Key;
 import java.util.Date;

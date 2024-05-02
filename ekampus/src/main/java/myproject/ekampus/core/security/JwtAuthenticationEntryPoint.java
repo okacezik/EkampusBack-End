@@ -1,4 +1,4 @@
-package myproject.ekampus.security.exceptions;
+package myproject.ekampus.core.security;
 
 import java.io.IOException;
 

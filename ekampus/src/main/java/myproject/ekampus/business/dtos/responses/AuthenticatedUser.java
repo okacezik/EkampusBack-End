@@ -18,4 +18,5 @@ public class AuthenticatedUser {
 	private String lastName;
 	private boolean hiddenAccount;
 	private String token;
+	private byte[] imageStudentPhoto;
 }

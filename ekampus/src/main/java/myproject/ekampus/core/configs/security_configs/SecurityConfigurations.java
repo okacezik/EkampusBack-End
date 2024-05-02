@@ -1,4 +1,4 @@
-package myproject.ekampus.security.config;
+package myproject.ekampus.core.configs.security_configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import myproject.ekampus.dataAccess.abstracts.StudentDao;
 
 @Configuration
 @RequiredArgsConstructor
-public class AppConfig {
+public class SecurityConfigurations {
 
 	private final StudentDao studentDao;
 	

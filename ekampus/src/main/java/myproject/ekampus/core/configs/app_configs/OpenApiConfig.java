@@ -1,4 +1,4 @@
-package myproject.ekampus.security.config;
+package myproject.ekampus.core.configs.app_configs;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 						name = "Okan Çezik", email = "okacezik@gmail.com"
 						), 
 				description = "OpenApi documentation for ekampüs ",
-				title = "OpenApi specification - Okan Çezik",
+				title = "ekampüs API - Okan Çezik",
 				version = "1.0"
 				),
 		servers = {
