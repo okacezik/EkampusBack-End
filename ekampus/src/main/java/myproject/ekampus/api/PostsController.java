@@ -27,7 +27,7 @@ import myproject.ekampus.core.utilites.results.Result;
 
 @Slf4j
 @CacheConfig(cacheNames = "posts")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/posts")
